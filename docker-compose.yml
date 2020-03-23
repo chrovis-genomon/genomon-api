@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:8.0.19
+    environment:
+      MYSQL_ROOT_PASSWORD: genomon-root
+      MYSQL_DATABASE: genomon-api
+      MYSQL_USER: genomon
+      MYSQL_PASSWORD: genomon-secret
+
+  genomon-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GIT_COMMIT: "${GIT_COMMIT}"
+    command:
+      - :duct/daemon
+      - :duct.migrator/ragtime
+      - :genomon-api.db.worker/worker
+    ports:
+      - "8000:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PORT: 80
+      JDBC_DATABASE_URL: jdbc:mysql://db/genomon-api
+      JDBC_USERNAME: genomon
+      JDBC_PASSWORD: genomon-secret
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+      AWS_REGION: "${AWS_REGION}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_SUBNET_ID: "${AWS_SUBNET_ID}"
+      AWS_SECURITY_GROUP_ID: "${AWS_SECURITY_GROUP_ID}"
+      AWS_KEY_NAME: "${AWS_KEY_NAME}"
+      AWS_ECS_INSTANCE_ROLE_NAME: "${AWS_ECS_INSTANCE_ROLE_NAME}"
+      AWS_OUTPUT_S3_BUCKET: "${AWS_OUTPUT_S3_BUCKET}"
+    depends_on:
+      - db
+    restart: on-failure:3

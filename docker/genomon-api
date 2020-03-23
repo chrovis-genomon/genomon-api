@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+CLASSPATH=/usr/share/genomon-api/genomon-api.jar:/etc/genomon-api
+
+if [ $# = 0 ]; then
+    java -cp "${CLASSPATH}" genomon_api.main
+else
+    java -cp "${CLASSPATH}" genomon_api.main $@
+fi

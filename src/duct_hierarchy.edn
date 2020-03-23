@@ -1,0 +1,5 @@
+{:genomon-api.executor.genomon-pipeline-cloud/executor [:genomon-api/executor],
+ :genomon-api.aws/client [:genomon-api/storage],
+ :genomon-api.docker.core/client [:genomon-api/docker],
+ :genomon-api.handler/module [:duct/module],
+ :genomon-api.db.sql/module [:duct/module]}

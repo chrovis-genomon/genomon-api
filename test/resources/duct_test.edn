@@ -1,0 +1,4 @@
+{:duct.database/sql {:connection-uri "jdbc:h2:mem:genomon-api-test;MODE=MYSQL"},
+ [:genomon-api/executor :genomon-api.handler-test/executor] {},
+ [:genomon-api/storage :genomon-api.handler-test/storage] {},
+ [:genomon-api/docker :genomon-api.handler-test/docker] {}}

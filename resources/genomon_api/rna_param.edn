@@ -1,0 +1,37 @@
+{:star-alignment
+ {:resource "--aws-ec2-instance-type t2.2xlarge --disk-size 128",
+  :image "genomon/star_alignment",
+  :bamtofastq-option "collate=1 combs=1 exclude=QCFAIL,SECONDARY,SUPPLEMENTARY tryoq=1",
+  :star-option "--runThreadN 6 --outSAMstrandField intronMotif --outSAMunmapped Within --alignMatesGapMax 500000 --alignIntronMax 500000 --alignSJstitchMismatchNmax -1 -1 -1 -1 --outSJfilterDistToOtherSJmin 0 0 0 0 --outSJfilterOverhangMin 12 12 12 12 --outSJfilterCountUniqueMin 1 1 1 1 --outSJfilterCountTotalMin 1 1 1 1 --chimSegmentMin 12 --chimJunctionOverhangMin 12 --outSAMtype BAM Unsorted",
+  :star-reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37.STAR-2.5.2a",
+  :samtools-sort-option "-@ 6 -m 3G"},
+ :fusion-count-control
+ {:resource "--aws-ec2-instance-type t2.medium",
+  :image "genomon/fusionfusion",
+  :chimera-utils-count-option nil},
+ :fusion-merge-control
+ {:resource "--aws-ec2-instance-type t2.medium",
+  :image "genomon/fusionfusion",
+  :chimera-utils-merge-control-option nil},
+ :fusionfusion
+ {:resource "--aws-ec2-instance-type t2.large",
+  :image "genomon/fusionfusion",
+  :fusionfusion-option "--grc",
+  :filt-option "--filter_same_gene --grc",
+  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa"},
+ :genomon-expression
+ {:resource "--aws-ec2-instance-type t2.large",
+  :image "genomon/genomon_expression:0.1.0",
+  :genomon-expression-option "--grc"},
+ :intron-retention
+ {:resource "--aws-ec2-instance-type t2.large",
+  :image "genomon/intron_retention:0.1.0",
+  :intron-retention-option "--grc"},
+ :paplot
+ {:enable "True",
+  :resource "--aws-ec2-instance-type t2.small",
+  :image "genomon/paplot:0.1.0",
+  :title "Genomon_RNA",
+  :remarks "Data used in this report were generated using below software.",
+  :software "star_alignment,fusionfusion,genomon_expression",
+  :config-file "s3://genomon-bucket-xcoo-archive-202001/paplot-config/genomon_pipeline_cloud_v2.0.0/paplot_rna.cfg"}}

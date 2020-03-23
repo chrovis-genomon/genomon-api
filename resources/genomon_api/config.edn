@@ -1,0 +1,59 @@
+{:duct.profile/base
+ {:duct.core/project-ns genomon-api,
+  :duct.router/cascading [#ig/ref [:genomon-api.handler/app]],
+
+  :duct.database.sql/hikaricp
+  {:health-check-registry #ig/ref :genomon-api.handler.status/health-check,
+   :metric-registry #ig/ref :genomon-api.handler.status/metrics,
+   :metrics-tracker-factory #ig/ref :genomon-api.handler.status/metrics-tracker-factory},
+  :genomon-api.handler.status/health-check {},
+  :genomon-api.handler.status/metrics {},
+  :genomon-api.handler.status/metrics-tracker-factory {},
+  :genomon-api.handler.status/get-status {:git-commit #duct/env ["GIT_COMMIT"]},
+
+  [:duct/const :genomon-api.executor.genomon-pipeline-cloud.config/instance-option]
+  {:aws-subnet-id #duct/env ["AWS_SUBNET_ID"],
+   :aws-security-group-id #duct/env ["AWS_SECURITY_GROUP_ID"],
+   :aws-key-name #duct/env ["AWS_KEY_NAME"],
+   :aws-ecs-instance-role-name
+   #duct/env ["AWS_ECS_INSTANCE_ROLE_NAME"]},
+  [:genomon-api.executor.genomon-pipeline-cloud.config/config
+   :genomon-api.executor.genomon-pipeline-cloud.config/dna]
+  {:config #duct/include "genomon_api/dna_param",
+   :instance-option #ig/ref :genomon-api.executor.genomon-pipeline-cloud.config/instance-option},
+  [:genomon-api.executor.genomon-pipeline-cloud.config/config
+   :genomon-api.executor.genomon-pipeline-cloud.config/rna]
+  {:config #duct/include "genomon_api/rna_param",
+   :instance-option #ig/ref :genomon-api.executor.genomon-pipeline-cloud.config/instance-option},
+
+  :genomon-api.executor.genomon-pipeline-cloud/executor
+  {:image "genomon_pipeline_cloud",
+   :tag "latest",
+   :env {"AWS_ACCESS_KEY_ID" #duct/env ["AWS_ACCESS_KEY_ID"],
+         "AWS_SECRET_ACCESS_KEY" #duct/env ["AWS_SECRET_ACCESS_KEY"],
+         "AWS_DEFAULT_REGION" #duct/env ["AWS_DEFAULT_REGION"]},
+   :output-bucket #duct/env ["AWS_OUTPUT_S3_BUCKET"]},
+  :genomon-api.docker.core/client {:read-timeout 86400000,
+                                   :connect-timeout 10000,
+                                   :max-total-connections 1000},
+  :genomon-api.aws/client {},
+  :genomon-api.db.worker/ch {:buf-or-n 100},
+  :genomon-api.db.worker/worker {}},
+
+ :duct.profile/dev   #duct/include "dev",
+ :duct.profile/local #duct/include "local",
+ :duct.profile/test  #duct/include "duct_test",
+
+ :duct.profile/prod
+ {:duct.database.sql/hikaricp {:username #duct/env ["JDBC_USERNAME"],
+                               :password #duct/env ["JDBC_PASSWORD"],
+                               :use-ssl false,
+                               :driver-class-name "com.mysql.cj.jdbc.Driver",
+                               :allow-public-key-retrieval true}},
+
+ :duct.module/logging {},
+ :duct.module.web/api {},
+ :duct.module/sql {},
+
+ :genomon-api.handler/module {},
+ :genomon-api.db.sql/module {:migration-dir "migrations"}}

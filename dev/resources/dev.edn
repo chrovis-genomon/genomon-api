@@ -1,0 +1,1 @@
+{:duct.database/sql {:connection-uri "jdbc:h2:mem:genomon-api;MODE=MYSQL"}}
