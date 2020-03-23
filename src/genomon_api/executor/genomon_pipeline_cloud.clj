@@ -17,7 +17,10 @@
 
 (defn- map-leaves [f m]
   (walk/postwalk
-   #(cond-> % (and (map-entry? %) (not (map? (val %)))) (update 1 f)) m))
+   #(cond-> %
+      (and (map-entry? %) (not (map? (val %))) (not (nil? (val %))))
+      (update 1 f))
+   m))
 
 (def ^:const ^:private dna-result-paths
   {:tumor-bam "bam/tumor/tumor.markdup.bam",
@@ -93,7 +96,10 @@
              :results (map-leaves
                        (partial ->s3 output-bucket id)
                        (case pipeline-type
-                         :dna dna-result-paths
+                         :dna (cond-> dna-result-paths
+                                (not (and (get-in samples [:normal :r1])
+                                          (get-in samples [:normal :r2])))
+                                (assoc :normal-bam nil))
                          :rna rna-result-paths)),
              :image-id (:id image),
              :samples samples,
