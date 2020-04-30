@@ -36,7 +36,7 @@
 
 (defn- parse-log [{{:keys [body]} :log :as event}]
   (condp re-matches body
-    #".*ecsub submit .*--tasks \S+?([^/\s]+)-tasks.*\n"
+    #".*aws ecs register-task-definition .*--cli-input-json \S+/(\S+)-tasks-.*\n"
     :>> (fn [[_ x]]
           {:task (keyword x),
            :status :submitted})
