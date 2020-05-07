@@ -172,6 +172,54 @@
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status mutations)))
         (is (= 200 (:status svs))))))
+  (testing "Start new DNA run without normal sample"
+    (let [{post-status :status
+           {:keys [run-id]}
+           :body} (request :post "/api/pipelines/dna/runs"
+                           (pr-str {:tumor {:r1 "tumor-r1",
+                                            :r2 "tumor-r2"}}))
+          {get-status :status
+           {:keys [run]} :body} (request
+                                 (str "/api/pipelines/dna/runs/" run-id))
+          config (-> (request "/api/pipelines/dna/config")
+                     :body
+                     :config)]
+      (is (= 201 post-status))
+      (is (uuid? run-id))
+      (is (= 200 get-status))
+      (is (= {:run-id run-id,
+              :status :created,
+              :image-id example-image-id,
+              :container-id example-container-id-1,
+              :output-dir (str example-bucket run-id),
+              :samples {:normal {:r1 nil, :r2 nil}
+                        :tumor {:r1 "tumor-r1",
+                                :r2 "tumor-r2"}},
+              :results {:normal-bam nil,
+                        :tumor-bam nil,
+                        :mutations nil,
+                        :svs nil},
+              :config config}
+             (dissoc run :created-at :updated-at)))
+      (loop [i 0]
+        (when (< i 5)
+          (when-not (->> run-id
+                         (str "/api/pipelines/dna/runs/")
+                         request
+                         :body
+                         :run
+                         :status
+                         (= :succeeded))
+            (Thread/sleep 1000)
+            (recur (inc i)))))
+      (let [normal-bam (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/normal.bam")))
+            tumor-bam (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/tumor.bam")))
+            mutations (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/mutations.tsv")))
+            svs (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/svs.tsv")))]
+        (is (= 200 (:status normal-bam)))
+        (is (= 200 (:status tumor-bam)))
+        (is (= 200 (:status mutations)))
+        (is (= 200 (:status svs))))))
   (testing "RNA config exists"
     (let [{:keys [status body]} (request "/api/pipelines/rna/config")]
       (is (= 200 status) "response ok")
