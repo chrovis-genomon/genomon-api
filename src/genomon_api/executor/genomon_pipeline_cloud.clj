@@ -63,7 +63,7 @@
                      (throw (ex-info "Results not found" {})))
                    (map-leaves (partial storage/stat storage) results)
                    (when-not (every? #{:terminated :skipped} (vals @state))
-                     (throw (ex-info "Tasks not finished" @state)))
+                     (log/warn logger ::incomplete-sub-tasks @state))
                    (assoc run-event :sub-tasks @state)
                    (catch Throwable e
                      (assoc run-event :status :failed :error e)))
