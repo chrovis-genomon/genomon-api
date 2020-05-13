@@ -89,19 +89,21 @@
 
 (defn- result-handler [{:keys [db storage]} result-key]
   {:response {200 {},
-              202 {}},
+              202 {},
+              404 {}},
    :handler
    (fn [{{:keys [path]} :parameters}]
      (let [{:keys [status results]} (db/get-dna-run db path)]
        (case status
-         :succeeded (let [m (->> results
-                                 result-key
-                                 (storage/stream-content storage))]
+         :succeeded (if-let [m (some->> results
+                                        result-key
+                                        (storage/stream-content storage))]
                       {:status 200,
                        :headers (->> (select-keys m [:e-tag :content-type])
                                      (csk-ex/transform-keys
                                       csk/->HTTP-Header-Case-String)),
-                       :body (:body m)})
+                       :body (:body m)}
+                      {:status 404})
          (:created :started :running) {:status 202}
          (:interrupted :failed) {:status 404})))})
 

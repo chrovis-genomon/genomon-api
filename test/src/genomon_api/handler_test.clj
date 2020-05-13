@@ -61,7 +61,9 @@
                  :image-id example-image-id,
                  :container-id example-container-id-1,
                  :config config,
-                 :results {:normal-bam (str example-bucket run-id "/normal.bam"),
+                 :results {:normal-bam (when (and (get-in samples [:normal :r1])
+                                                  (get-in samples [:normal :r2]))
+                                         (str example-bucket run-id "/normal.bam")),
                            :tumor-bam (str example-bucket run-id "/tumor.bam"),
                            :mutations (str example-bucket run-id "/mut.txt"),
                            :svs (str example-bucket run-id "/sv.txt")}}]
@@ -96,7 +98,9 @@
 (defmethod ig/init-key ::storage [_ _]
   (reify storage/IStorage
     (stat [this url] true)
-    (stream-content [this url] {:body (java.io.ByteArrayInputStream. (byte-array []))})
+    (stream-content [this url]
+      (when url
+        {:body (java.io.ByteArrayInputStream. (byte-array []))}))
     (delete-dir [this url] true)))
 
 (defmethod ig/init-key ::docker [_ _]
@@ -216,7 +220,7 @@
             tumor-bam (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/tumor.bam")))
             mutations (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/mutations.tsv")))
             svs (*handler* (mock/request :get (str "/api/pipelines/dna/runs/" run-id "/svs.tsv")))]
-        (is (= 200 (:status normal-bam)))
+        (is (= 404 (:status normal-bam)))
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status mutations)))
         (is (= 200 (:status svs))))))
