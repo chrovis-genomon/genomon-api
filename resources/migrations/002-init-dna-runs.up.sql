@@ -1,8 +1,8 @@
 CREATE TABLE `dna-runs` (
   `dna-run-id` INT UNSIGNED AUTO_INCREMENT NOT NULL,
   `run-id` BINARY(16) NOT NULL,
-  `normal-r1` VARCHAR(1024) NOT NULL,
-  `normal-r2` VARCHAR(1024) NOT NULL,
+  `normal-r1` VARCHAR(1024) DEFAULT NULL,
+  `normal-r2` VARCHAR(1024) DEFAULT NULL,
   `tumor-r1` VARCHAR(1024) NOT NULL,
   `tumor-r2` VARCHAR(1024) NOT NULL,
   `normal-bam` VARCHAR(1024) DEFAULT NULL,

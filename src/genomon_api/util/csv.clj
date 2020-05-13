@@ -11,12 +11,16 @@
 
 (defn gen-dna-input [{{normal-r1 :r1 normal-r2 :r2} :normal
                       {tumor-r1 :r1 tumor-r2 :r2} :tumor}]
-  (gen-input-file [[:fastq [["tumor" tumor-r1 tumor-r2]
-                            ["normal" normal-r1 normal-r2]]]
-                   [:mutation-call [["tumor" "normal" "None"]]]
-                   [:sv-detection [["tumor" "normal" "None"]]]
-                   [:qc [["tumor"]
-                         ["normal"]]]]))
+  (if (and normal-r1 normal-r2)
+    (gen-input-file [[:fastq [["tumor" tumor-r1 tumor-r2]
+                              ["normal" normal-r1 normal-r2]]]
+                     [:mutation-call [["tumor" "normal" "None"]]]
+                     [:sv-detection [["tumor" "normal" "None"]]]
+                     [:qc [["tumor"] ["normal"]]]])
+    (gen-input-file [[:fastq [["tumor" tumor-r1 tumor-r2]]]
+                     [:mutation-call [["tumor" "None" "None"]]]
+                     [:sv-detection [["tumor" "None" "None"]]]
+                     [:qc [["tumor"]]]])))
 
 (defn gen-rna-input [{:keys [r1 r2]}]
   (gen-input-file [[:fastq [["rna" r1 r2]]]

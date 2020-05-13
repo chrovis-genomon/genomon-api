@@ -33,6 +33,6 @@
             :dna (db/update-dna-run-status db m)
             :rna (db/update-rna-run-status db m))
           (catch Throwable e
-            (log/error logger ::error m)))
+            (log/error logger ::error (assoc m :error e))))
         (recur))
       (log/debug logger ::end-worker {}))))
