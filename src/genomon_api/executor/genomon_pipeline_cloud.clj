@@ -17,9 +17,14 @@
 
 (defn- map-leaves [f m]
   (walk/postwalk
-   #(cond-> %
-      (and (map-entry? %) (not (map? (val %))) (not (nil? (val %))))
-      (update 1 f))
+   (fn [x]
+     (cond (map-entry? x)
+           (if (and (not (coll? (val x))) (not (nil? (val x))))
+             (update x 1 f)
+             x)
+
+           (vector? x) (mapv f x)
+           :else x))
    m))
 
 (def ^:const ^:private dna-result-paths
