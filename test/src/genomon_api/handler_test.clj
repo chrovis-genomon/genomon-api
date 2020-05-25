@@ -224,6 +224,16 @@
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status mutations)))
         (is (= 200 (:status svs))))))
+  (testing "Accept requests for DNA run with control panel"
+    (are [samples] (= 201
+                      (->> (pr-str samples)
+                           (request :post "/api/pipelines/dna/runs")
+                           :status))
+      {:tumor {:r1 "tumor-r1" :r2 "tumor-r1"}
+       :controlpanel ["control-sample1" "control-sample2"]}
+      {:tumor {:r1 "tumor-r1" :r2 "tumor-r1"}
+       :normal {:r1 "normal-r1" :r2 "normal-r1"}
+       :controlpanel ["control-sample" "control-sample2"]}))
   (testing "RNA config exists"
     (let [{:keys [status body]} (request "/api/pipelines/rna/config")]
       (is (= 200 status) "response ok")
@@ -280,4 +290,11 @@
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status fusions)))
         (is (= 200 (:status expressions)))
-        (is (= 200 (:status intron-retentions)))))))
+        (is (= 200 (:status intron-retentions))))))
+  (testing "Accept requests for RNA run with control panel"
+    (is (= 201
+           (:status
+            (request :post "/api/pipelines/rna/runs"
+                     (pr-str {:r1 "tumor-r1" :r2 "tumor-r1"
+                              :controlpanel
+                              ["control-sample1" "control-sample2"]})))))))
