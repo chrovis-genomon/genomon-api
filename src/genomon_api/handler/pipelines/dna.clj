@@ -36,7 +36,7 @@
   {:summary "Create a new run",
    :parameters {:body {:tumor {:r1 string?, :r2 string?},
                        (ds/opt :normal) {:r1 string?, :r2 string?},
-                       (ds/opt :controlpanel) [string?]}},
+                       (ds/opt :control-panel) [string?]}},
    :response {201 {:body {:run-id uuid?}}},
    :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
               (let [id (UUID/randomUUID)

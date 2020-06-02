@@ -230,10 +230,10 @@
                            (request :post "/api/pipelines/dna/runs")
                            :status))
       {:tumor {:r1 "tumor-r1" :r2 "tumor-r1"}
-       :controlpanel ["control-sample1" "control-sample2"]}
+       :control-panel ["control-sample1" "control-sample2"]}
       {:tumor {:r1 "tumor-r1" :r2 "tumor-r1"}
        :normal {:r1 "normal-r1" :r2 "normal-r1"}
-       :controlpanel ["control-sample" "control-sample2"]}))
+       :control-panel ["control-sample" "control-sample2"]}))
   (testing "RNA config exists"
     (let [{:keys [status body]} (request "/api/pipelines/rna/config")]
       (is (= 200 status) "response ok")
@@ -296,5 +296,5 @@
            (:status
             (request :post "/api/pipelines/rna/runs"
                      (pr-str {:r1 "tumor-r1" :r2 "tumor-r1"
-                              :controlpanel
+                              :control-panel
                               ["control-sample1" "control-sample2"]})))))))
