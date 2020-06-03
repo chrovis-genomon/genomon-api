@@ -38,9 +38,7 @@
    :response {201 {:body {:run-id uuid?}}},
    :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (->> body
-                             (merge {:control-panel nil})
-                             (exec/run-rna-pipeline executor id rna-config))]
+                    run (exec/run-rna-pipeline executor id rna-config body)]
                 (try
                   (db/create-rna-run db run)
                   (rur/created

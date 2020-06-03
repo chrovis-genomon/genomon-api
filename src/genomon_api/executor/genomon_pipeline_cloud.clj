@@ -102,8 +102,7 @@
                        (partial ->s3 output-bucket id)
                        (case pipeline-type
                          :dna (cond-> dna-result-paths
-                                (not (and (get-in samples [:normal :r1])
-                                          (get-in samples [:normal :r2])))
+                                (not (:normal samples))
                                 (assoc :normal-bam nil))
                          :rna rna-result-paths)),
              :image-id (:id image),
