@@ -150,7 +150,8 @@
               :samples {:normal {:r1 "normal-r1",
                                  :r2 "normal-r2"},
                         :tumor {:r1 "tumor-r1",
-                                :r2 "tumor-r2"}},
+                                :r2 "tumor-r2"}
+                        :control-panel nil},
               :results {:normal-bam nil,
                         :tumor-bam nil,
                         :mutations nil,
@@ -198,7 +199,8 @@
               :output-dir (str example-bucket run-id),
               :samples {:normal {:r1 nil, :r2 nil}
                         :tumor {:r1 "tumor-r1",
-                                :r2 "tumor-r2"}},
+                                :r2 "tumor-r2"}
+                        :control-panel nil},
               :results {:normal-bam nil,
                         :tumor-bam nil,
                         :mutations nil,
@@ -265,7 +267,7 @@
               :image-id example-image-id,
               :container-id example-container-id-1,
               :output-dir (str example-bucket run-id),
-              :samples {:r1 "rna-r1", :r2 "rna-r2"},
+              :samples {:r1 "rna-r1", :r2 "rna-r2" :control-panel nil},
               :results {:bam nil,
                         :fusions nil,
                         :expressions nil,
