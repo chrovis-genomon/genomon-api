@@ -1,6 +1,6 @@
 -- :name _list-rna-runs :? :*
 SELECT `r`.*,
-       `rr`.`r1`, `rr`.`r2`,
+       `rr`.`r1`, `rr`.`r2`, `rr`.`control-panel`,
        `rr`.`bam`, `rr`.`fusions`, `rr`.`expressions`, `rr`.`intron-retentions`
   FROM `rna-runs` AS `rr`
          INNER JOIN `runs` AS `r`
@@ -11,7 +11,7 @@ SELECT `r`.*,
 
 -- :name _get-rna-run :? :1
 SELECT `r`.*,
-       `rr`.`r1`, `rr`.`r2`,
+       `rr`.`r1`, `rr`.`r2`, `rr`.`control-panel`,
        `rr`.`bam`, `rr`.`fusions`, `rr`.`expressions`, `rr`.`intron-retentions`
   FROM `rna-runs` AS `rr`
          INNER JOIN `runs` AS `r`
@@ -19,8 +19,8 @@ SELECT `r`.*,
  WHERE `rr`.`run-id` = :run-id;
 
 -- :name _insert-rna-run! :i! :raw
-INSERT INTO `rna-runs` (`run-id`, `r1`, `r2`)
-VALUES (:run-id, :r1, :r2);
+INSERT INTO `rna-runs` (`run-id`, `r1`, `r2`, `control-panel`)
+VALUES (:run-id, :r1, :r2, :control-panel);
 
 -- :name _update-rna-results! :! :n
 UPDATE `rna-runs`

@@ -66,6 +66,7 @@
    :created-at inst->ts,
    :updated-at inst->ts,
    :status (comp name statuses),
+   :control-panel ->json-str,
    :config ->json-str})
 
 (def ^:privat run-parser
@@ -73,6 +74,7 @@
    :created-at ts->inst,
    :updated-at ts->inst,
    :status keyword,
+   :control-panel json-str->,
    :config json-str->})
 
 (hugsql/def-db-fns "hugsql/runs.sql")
@@ -84,6 +86,7 @@
    [:normal-r2] [:samples :normal :r2]
    [:tumor-r1] [:samples :tumor :r1]
    [:tumor-r2] [:samples :tumor :r2]
+   [:control-panel] [:samples :control-panel]
    [:normal-bam] [:results :normal-bam]
    [:tumor-bam] [:results :tumor-bam]
    [:mutations] [:results :mutations]
@@ -125,6 +128,7 @@
 (def ^:private rna-samples-key
   {[:r1] [:samples :r1]
    [:r2] [:samples :r2]
+   [:control-panel] [:samples :control-panel]
    [:bam] [:results :bam]
    [:fusions] [:results :fusions]
    [:expressions] [:results :expressions]

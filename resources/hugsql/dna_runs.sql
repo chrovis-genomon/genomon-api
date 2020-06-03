@@ -1,6 +1,6 @@
 -- :name _list-dna-runs :? :*
 SELECT `r`.*,
-       `d`.`normal-r1`, `d`.`normal-r2`, `d`.`tumor-r1`, `d`.`tumor-r2`,
+       `d`.`normal-r1`, `d`.`normal-r2`, `d`.`tumor-r1`, `d`.`tumor-r2`, `d`.`control-panel`,
        `d`.`normal-bam`, `d`.`tumor-bam`, `d`.`mutations`, `d`.svs
   FROM `dna-runs` AS `d`
          INNER JOIN `runs` AS `r`
@@ -11,7 +11,7 @@ SELECT `r`.*,
 
 -- :name _get-dna-run :? :1
 SELECT `r`.*,
-       `d`.`normal-r1`, `d`.`normal-r2`, `d`.`tumor-r1`, `d`.`tumor-r2`,
+       `d`.`normal-r1`, `d`.`normal-r2`, `d`.`tumor-r1`, `d`.`tumor-r2`, `d`.`control-panel`,
        `d`.`normal-bam`, `d`.`tumor-bam`, `d`.`mutations`, `d`.svs
   FROM `dna-runs` AS `d`
          INNER JOIN `runs` AS `r`
@@ -19,8 +19,8 @@ SELECT `r`.*,
  WHERE `d`.`run-id` = :run-id;
 
 -- :name _insert-dna-run! :i! :raw
-INSERT INTO `dna-runs` (`run-id`, `normal-r1`, `normal-r2`, `tumor-r1`, `tumor-r2`)
-VALUES (:run-id, :normal-r1, :normal-r2, :tumor-r1, :tumor-r2);
+INSERT INTO `dna-runs` (`run-id`, `normal-r1`, `normal-r2`, `tumor-r1`, `tumor-r2`, `control-panel`)
+VALUES (:run-id, :normal-r1, :normal-r2, :tumor-r1, :tumor-r2, :control-panel);
 
 -- :name _update-dna-results! :! :n
 UPDATE `dna-runs`

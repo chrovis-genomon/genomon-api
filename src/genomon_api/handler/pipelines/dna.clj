@@ -40,7 +40,9 @@
    :response {201 {:body {:run-id uuid?}}},
    :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (->> (merge {:normal {:r1 nil :r2 nil}} body)
+                    run (->> body
+                             (merge {:normal {:r1 nil :r2 nil}
+                                     :control-panel nil})
                              (exec/run-dna-pipeline executor id dna-config))]
                 (try
                   (db/create-dna-run db run)
