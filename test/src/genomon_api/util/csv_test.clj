@@ -47,7 +47,7 @@ control_sample1,sample2.bam
 control_panel,control_sample0,control_sample1
 
 [mutation_call]
-tumor,None,control_panel
+tumor,None,None
 
 [sv_detection]
 tumor,None,control_panel
@@ -70,7 +70,7 @@ control_sample1,sample2.bam
 control_panel,control_sample0,control_sample1
 
 [mutation_call]
-tumor,normal,control_panel
+tumor,normal,None
 
 [sv_detection]
 tumor,normal,control_panel

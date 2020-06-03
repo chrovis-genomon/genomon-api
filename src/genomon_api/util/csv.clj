@@ -18,17 +18,20 @@
 (defn gen-dna-input [{{normal-r1 :r1 normal-r2 :r2} :normal
                       {tumor-r1 :r1 tumor-r2 :r2} :tumor
                       :keys [control-panel]}]
-  (let [tumor-only? (not (and normal-r1 normal-r2))
-        input (conj ["tumor"]
-                    (if tumor-only? "None" "normal")
-                    (if (seq control-panel) "control_panel" "None"))]
-    (-> `[[:fastq ~(cond-> [["tumor" tumor-r1 tumor-r2]]
-                     (not tumor-only?)
-                     (conj ["normal" normal-r1 normal-r2]))]
+  (let [tumor-only? (not (and normal-r1 normal-r2))]
+    (-> `[[:fastq
+           ~(cond-> [["tumor" tumor-r1 tumor-r2]]
+              (not tumor-only?)
+              (conj ["normal" normal-r1 normal-r2]))]
           ~@(gen-controlpanel-config control-panel)
-          [:mutation-call [~input]]
-          [:sv-detection [~input]]
-          [:qc [["tumor"] ~@(when-not tumor-only? [["normal"]])]]]
+          [:mutation-call
+           [["tumor" ~(if tumor-only? "None" "normal") "None"]]]
+          [:sv-detection
+           [~(conj ["tumor"]
+                   (if tumor-only? "None" "normal")
+                   (if (seq control-panel) "control_panel" "None"))]]
+          [:qc
+           [["tumor"] ~@(when-not tumor-only? [["normal"]])]]]
         (gen-input-file))))
 
 (defn gen-rna-input [{:keys [r1 r2 control-panel]}]
