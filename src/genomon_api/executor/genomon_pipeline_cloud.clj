@@ -17,9 +17,14 @@
 
 (defn- map-leaves [f m]
   (walk/postwalk
-   #(cond-> %
-      (and (map-entry? %) (not (map? (val %))) (not (nil? (val %))))
-      (update 1 f))
+   (fn [x]
+     (cond (map-entry? x)
+           (if (and (not (coll? (val x))) (not (nil? (val x))))
+             (update x 1 f)
+             x)
+
+           (vector? x) (mapv f x)
+           :else x))
    m))
 
 (def ^:const ^:private dna-result-paths
@@ -97,8 +102,7 @@
                        (partial ->s3 output-bucket id)
                        (case pipeline-type
                          :dna (cond-> dna-result-paths
-                                (not (and (get-in samples [:normal :r1])
-                                          (get-in samples [:normal :r2])))
+                                (not (:normal samples))
                                 (assoc :normal-bam nil))
                          :rna rna-result-paths)),
              :image-id (:id image),

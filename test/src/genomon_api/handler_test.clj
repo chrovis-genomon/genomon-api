@@ -196,8 +196,7 @@
               :image-id example-image-id,
               :container-id example-container-id-1,
               :output-dir (str example-bucket run-id),
-              :samples {:normal {:r1 nil, :r2 nil}
-                        :tumor {:r1 "tumor-r1",
+              :samples {:tumor {:r1 "tumor-r1",
                                 :r2 "tumor-r2"}},
               :results {:normal-bam nil,
                         :tumor-bam nil,
@@ -224,6 +223,65 @@
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status mutations)))
         (is (= 200 (:status svs))))))
+  (testing "Start new DNA run with control panel"
+    (let [{post-status :status
+           {:keys [run-id]}
+           :body} (request :post "/api/pipelines/dna/runs"
+                           (pr-str {:tumor {:r1 "tumor-r1", :r2 "tumor-r2"},
+                                    :control-panel
+                                    ["control-sample1" "control-sample2"]}))
+          {get-status :status
+           {:keys [run]} :body} (request
+                                 (str "/api/pipelines/dna/runs/" run-id))
+          config (-> (request "/api/pipelines/dna/config")
+                     :body
+                     :config)]
+      (is (= 201 post-status))
+      (is (uuid? run-id))
+      (is (= 200 get-status))
+      (is (= {:run-id run-id,
+              :status :created,
+              :image-id example-image-id,
+              :container-id example-container-id-1,
+              :output-dir (str example-bucket run-id),
+              :samples {:tumor {:r1 "tumor-r1", :r2 "tumor-r2"},
+                        :control-panel ["control-sample1" "control-sample2"]},
+              :results {:normal-bam nil,
+                        :tumor-bam nil,
+                        :mutations nil,
+                        :svs nil},
+              :config config}
+             (dissoc run :created-at :updated-at))))
+    (let [{post-status :status
+           {:keys [run-id]}
+           :body} (request :post "/api/pipelines/dna/runs"
+                           (pr-str {:tumor {:r1 "tumor-r1", :r2 "tumor-r2"},
+                                    :normal {:r1 "normal-r1", :r2 "normal-r1"},
+                                    :control-panel
+                                    ["control-sample1" "control-sample2"]}))
+          {get-status :status
+           {:keys [run]} :body} (request
+                                 (str "/api/pipelines/dna/runs/" run-id))
+          config (-> (request "/api/pipelines/dna/config")
+                     :body
+                     :config)]
+      (is (= 201 post-status))
+      (is (uuid? run-id))
+      (is (= 200 get-status))
+      (is (= {:run-id run-id,
+              :status :created,
+              :image-id example-image-id,
+              :container-id example-container-id-1,
+              :output-dir (str example-bucket run-id),
+              :samples {:tumor {:r1 "tumor-r1", :r2 "tumor-r2"},
+                        :normal {:r1 "normal-r1", :r2 "normal-r1"}
+                        :control-panel ["control-sample1" "control-sample2"]},
+              :results {:normal-bam nil,
+                        :tumor-bam nil,
+                        :mutations nil,
+                        :svs nil},
+              :config config}
+             (dissoc run :created-at :updated-at)))))
   (testing "RNA config exists"
     (let [{:keys [status body]} (request "/api/pipelines/rna/config")]
       (is (= 200 status) "response ok")
@@ -280,4 +338,32 @@
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status fusions)))
         (is (= 200 (:status expressions)))
-        (is (= 200 (:status intron-retentions)))))))
+        (is (= 200 (:status intron-retentions))))))
+  (testing "Start new RNA run with control panel"
+    (let [{post-status :status
+           {:keys [run-id]}
+           :body} (request :post "/api/pipelines/rna/runs"
+                           (pr-str {:r1 "rna-r1", :r2 "rna-r2",
+                                    :control-panel
+                                    ["control-sample1" "control-sample2"]}))
+          {get-status :status
+           {:keys [run]} :body} (request (str "/api/pipelines/rna/runs/" run-id))
+          config (-> (request "/api/pipelines/rna/config")
+                     :body
+                     :config)]
+      (is (= 201 post-status))
+      (is (uuid? run-id))
+      (is (= 200 get-status))
+      (is (= {:run-id run-id,
+              :status :created,
+              :image-id example-image-id,
+              :container-id example-container-id-1,
+              :output-dir (str example-bucket run-id),
+              :samples {:r1 "rna-r1", :r2 "rna-r2",
+                        :control-panel ["control-sample1" "control-sample2"]},
+              :results {:bam nil,
+                        :fusions nil,
+                        :expressions nil,
+                        :intron-retentions nil},
+              :config config}
+             (dissoc run :created-at :updated-at))))))

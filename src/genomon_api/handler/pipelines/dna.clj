@@ -34,13 +34,13 @@
 
 (defhandler ::create-new-run [_ {:keys [db executor dna-config logger]}]
   {:summary "Create a new run",
-   :parameters {:body {(ds/opt :normal) {:r1 string?, :r2 string?},
-                       :tumor {:r1 string?, :r2 string?}}},
+   :parameters {:body {:tumor {:r1 string?, :r2 string?},
+                       (ds/opt :normal) {:r1 string?, :r2 string?},
+                       (ds/opt :control-panel) [string?]}},
    :response {201 {:body {:run-id uuid?}}},
    :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (->> (merge {:normal {:r1 nil :r2 nil}} body)
-                             (exec/run-dna-pipeline executor id dna-config))]
+                    run (exec/run-dna-pipeline executor id dna-config body)]
                 (try
                   (db/create-dna-run db run)
                   (rur/created

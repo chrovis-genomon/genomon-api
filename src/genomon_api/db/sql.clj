@@ -49,7 +49,9 @@
    (fn [r ks ks']
      (let [v (get-in r ks ::not-found)]
        (if-not (identical? ::not-found v)
-         (assoc-in (medley/dissoc-in r ks) ks' v)
+         (cond-> (medley/dissoc-in r ks)
+           (or (some? v) (not (:ignore-if-nil (meta ks))))
+           (assoc-in ks' v))
          r)))
    map
    keymap))
@@ -66,6 +68,7 @@
    :created-at inst->ts,
    :updated-at inst->ts,
    :status (comp name statuses),
+   :control-panel ->json-str,
    :config ->json-str})
 
 (def ^:privat run-parser
@@ -73,6 +76,7 @@
    :created-at ts->inst,
    :updated-at ts->inst,
    :status keyword,
+   :control-panel json-str->,
    :config json-str->})
 
 (hugsql/def-db-fns "hugsql/runs.sql")
@@ -80,10 +84,14 @@
 ;; DNA
 
 (def ^:private dna-samples-key
-  {[:normal-r1] [:samples :normal :r1]
+  {^:ignore-if-nil
+   [:normal-r1] [:samples :normal :r1]
+   ^:ignore-if-nil
    [:normal-r2] [:samples :normal :r2]
    [:tumor-r1] [:samples :tumor :r1]
    [:tumor-r2] [:samples :tumor :r2]
+   ^:ignore-if-nil
+   [:control-panel] [:samples :control-panel]
    [:normal-bam] [:results :normal-bam]
    [:tumor-bam] [:results :tumor-bam]
    [:mutations] [:results :mutations]
@@ -103,7 +111,9 @@
   db/IDNARunDB
   (create-dna-run [{:keys [spec]} run]
     (jdbc/with-db-transaction [tx spec]
-      (let [run (unparse-dna run)]
+      (let [run (->> (unparse-dna run)
+                     (merge {:normal-r1 nil :normal-r2 nil
+                             :control-panel nil}))]
         (_insert-run! tx run)
         (_insert-dna-run! tx run))))
   (update-dna-run-status [{:keys [spec]} {:keys [status] :as run}]
@@ -125,6 +135,8 @@
 (def ^:private rna-samples-key
   {[:r1] [:samples :r1]
    [:r2] [:samples :r2]
+   ^:ignore-if-nil
+   [:control-panel] [:samples :control-panel]
    [:bam] [:results :bam]
    [:fusions] [:results :fusions]
    [:expressions] [:results :expressions]
@@ -144,7 +156,8 @@
   db/IRNARunDB
   (create-rna-run [{:keys [spec]} run]
     (jdbc/with-db-transaction [tx spec]
-      (let [run (unparse-rna run)]
+      (let [run (->> (unparse-rna run)
+                     (merge {:control-panel nil}))]
         (_insert-run! tx run)
         (_insert-rna-run! tx run))))
   (update-rna-run-status [{:keys [spec]} {:keys [status] :as run}]

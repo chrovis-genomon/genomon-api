@@ -10,7 +10,8 @@
             [genomon-api.storage :as storage]
             [genomon-api.handler.util :refer [defhandler]]
             [camel-snake-kebab.extras :as csk-ex]
-            [camel-snake-kebab.core :as csk])
+            [camel-snake-kebab.core :as csk]
+            [spec-tools.data-spec :as ds])
   (:import [java.util UUID]))
 
 (defhandler ::get-pipeline-info [_ {:keys [rna-config]}]
@@ -33,7 +34,7 @@
 
 (defhandler ::create-new-run [_ {:keys [db executor rna-config logger]}]
   {:summary "Create a new run",
-   :parameters {:body {:r1 string?, :r2 string?}},
+   :parameters {:body {:r1 string?, :r2 string?, (ds/opt :control-panel) [string?]}},
    :response {201 {:body {:run-id uuid?}}},
    :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
               (let [id (UUID/randomUUID)
