@@ -60,7 +60,9 @@
        ["/expressions.tsv" {:name ::rna/expressions,
                             :get ::rna/get-expressions}]
        ["/intron-retentions.tsv" {:name ::rna/intron-retentions,
-                                  :get ::rna/get-intron-retentions}]]]]]])
+                                  :get ::rna/get-intron-retentions}]
+       ["/svs.tsv" {:name ::rna/svs,
+                    :get ::rna/get-svs}]]]]]])
 
 (def ^:private handler-refs
   (let [http-methods #{:get :head :post :put :delete :options :patch}

@@ -140,7 +140,8 @@
    [:bam] [:results :bam]
    [:fusions] [:results :fusions]
    [:expressions] [:results :expressions]
-   [:intron-retentions] [:results :intron-retentions]})
+   [:intron-retentions] [:results :intron-retentions]
+   [:svs] [:results :svs]})
 
 (def ^:private parse-rna
   (comp (partial rename-keys-in rna-samples-key)

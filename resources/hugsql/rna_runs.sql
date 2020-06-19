@@ -1,7 +1,7 @@
 -- :name _list-rna-runs :? :*
 SELECT `r`.*,
        `rr`.`r1`, `rr`.`r2`, `rr`.`control-panel`,
-       `rr`.`bam`, `rr`.`fusions`, `rr`.`expressions`, `rr`.`intron-retentions`
+       `rr`.`bam`, `rr`.`fusions`, `rr`.`expressions`, `rr`.`intron-retentions`, `rr`.`svs`
   FROM `rna-runs` AS `rr`
          INNER JOIN `runs` AS `r`
              ON `r`.`run-id` = `rr`.`run-id`
@@ -12,7 +12,7 @@ SELECT `r`.*,
 -- :name _get-rna-run :? :1
 SELECT `r`.*,
        `rr`.`r1`, `rr`.`r2`, `rr`.`control-panel`,
-       `rr`.`bam`, `rr`.`fusions`, `rr`.`expressions`, `rr`.`intron-retentions`
+       `rr`.`bam`, `rr`.`fusions`, `rr`.`expressions`, `rr`.`intron-retentions`, `rr`.`svs`
   FROM `rna-runs` AS `rr`
          INNER JOIN `runs` AS `r`
              ON `r`.`run-id` = `rr`.`run-id`
@@ -27,5 +27,6 @@ UPDATE `rna-runs`
    SET `bam` = :bam,
        `fusions` = :fusions,
        `expressions` = :expressions,
-       `intron-retentions` = :intron-retentions
+       `intron-retentions` = :intron-retentions,
+       `svs` = :svs
  WHERE `run-id` = :run-id;
