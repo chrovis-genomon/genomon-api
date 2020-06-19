@@ -87,6 +87,9 @@ normal"
     "[fastq]
 rna,r1.fastq,r2.fastq
 
+[sv_detection]
+rna,None,None
+
 [fusion]
 rna,None
 
@@ -108,6 +111,9 @@ control_sample0,sample1.bam
 
 [controlpanel]
 control_panel,control_sample0
+
+[sv_detection]
+rna,None,None
 
 [fusion]
 rna,control_panel

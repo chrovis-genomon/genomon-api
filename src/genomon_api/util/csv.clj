@@ -37,6 +37,7 @@
 (defn gen-rna-input [{:keys [r1 r2 control-panel]}]
   (-> `[[:fastq [["rna" ~r1 ~r2]]]
         ~@(gen-controlpanel-config control-panel)
+        [:sv-detection [["rna" "None" "None"]]]
         [:fusion [~(conj ["rna"] (if (seq control-panel) "control_panel" "None"))]]
         [:expression [["rna"]]]
         [:intron-retention [["rna"]]]
