@@ -122,3 +122,8 @@
   (assoc (result-handler opts :intron-retentions)
          :summary "Get a list of intron-retentions in TSV format"
          :swagger {:produces ["text/tab-separated-values"]}))
+
+(defhandler ::get-svs [_ {:keys [db storage] :as opts}]
+  (assoc (result-handler opts :svs)
+         :summary "Get a list of structural variants in TSV format"
+         :swagger {:produces ["text/tab-separated-values"]}))

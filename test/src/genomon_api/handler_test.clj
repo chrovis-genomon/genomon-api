@@ -86,7 +86,8 @@
                  :results {:bam (str example-bucket run-id "/tumor.bam"),
                            :fusions (str example-bucket run-id "/fusions.tsv"),
                            :expressions (str example-bucket run-id "/expressions.tsv"),
-                           :intron-retentions (str example-bucket run-id "/intron-retentions.tsv")}}]
+                           :intron-retentions (str example-bucket run-id "/intron-retentions.tsv"),
+                           :svs (str example-bucket run-id "/svs.tsv")}}]
         (async/go
           (async/<! (async/timeout 100))
           (async/>! ch (assoc run :status :started))
@@ -317,7 +318,8 @@
               :results {:bam nil,
                         :fusions nil,
                         :expressions nil,
-                        :intron-retentions nil},
+                        :intron-retentions nil
+                        :svs nil},
               :config config}
              (dissoc run :created-at :updated-at)))
       (loop [i 0]
@@ -334,11 +336,13 @@
       (let [tumor-bam (*handler* (mock/request :get (str "/api/pipelines/rna/runs/" run-id "/tumor.bam")))
             fusions (*handler* (mock/request :get (str "/api/pipelines/rna/runs/" run-id "/fusions.tsv")))
             expressions (*handler* (mock/request :get (str "/api/pipelines/rna/runs/" run-id "/expressions.tsv")))
-            intron-retentions (*handler* (mock/request :get (str "/api/pipelines/rna/runs/" run-id "/intron-retentions.tsv")))]
+            intron-retentions (*handler* (mock/request :get (str "/api/pipelines/rna/runs/" run-id "/intron-retentions.tsv")))
+            svs (*handler* (mock/request :get (str "/api/pipelines/rna/runs/" run-id "/svs.tsv")))]
         (is (= 200 (:status tumor-bam)))
         (is (= 200 (:status fusions)))
         (is (= 200 (:status expressions)))
-        (is (= 200 (:status intron-retentions))))))
+        (is (= 200 (:status intron-retentions)))
+        (is (= 200 (:status svs))))))
   (testing "Start new RNA run with control panel"
     (let [{post-status :status
            {:keys [run-id]}
@@ -364,6 +368,7 @@
               :results {:bam nil,
                         :fusions nil,
                         :expressions nil,
-                        :intron-retentions nil},
+                        :intron-retentions nil,
+                        :svs nil},
               :config config}
              (dissoc run :created-at :updated-at))))))
