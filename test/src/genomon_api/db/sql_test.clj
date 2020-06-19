@@ -137,7 +137,8 @@
             :image-id image-id,
             :container-id container-id,
             :config {},
-            :results {:bam nil, :fusions nil, :expressions nil, :intron-retentions nil}}
+            :results {:bam nil, :fusions nil, :expressions nil,
+                      :intron-retentions nil, :svs nil}}
            (dissoc (db/get-rna-run *db* {:run-id rna-run-id1})
                    :created-at :updated-at)))
     (is (not (nil? (seq (db/list-rna-runs *db* {:limit 10 :offset 0})))))
@@ -148,7 +149,8 @@
                                              :results {:bam "",
                                                        :fusions "",
                                                        :expressions "",
-                                                       :intron-retentions ""}})))
+                                                       :intron-retentions ""
+                                                       :svs ""}})))
     (is (= 1 (db/delete-rna-run *db* {:run-id rna-run-id1})))
     (is (nil? (db/get-rna-run *db* {:run-id rna-run-id1}))))
   (testing "rna-runs with control panel"
@@ -168,7 +170,8 @@
             :image-id image-id,
             :container-id container-id,
             :config {},
-            :results {:bam nil, :fusions nil, :expressions nil, :intron-retentions nil}}
+            :results {:bam nil, :fusions nil, :expressions nil,
+                      :intron-retentions nil, :svs nil}}
            (dissoc (db/get-rna-run *db* {:run-id rna-run-id2})
                    :created-at :updated-at)))
     (is (not (nil? (seq (db/list-rna-runs *db* {:limit 10 :offset 0})))))
@@ -179,6 +182,7 @@
                                              :results {:bam "",
                                                        :fusions "",
                                                        :expressions "",
-                                                       :intron-retentions ""}})))
+                                                       :intron-retentions ""
+                                                       :svs ""}})))
     (is (= 1 (db/delete-rna-run *db* {:run-id rna-run-id2})))
     (is (nil? (db/get-rna-run *db* {:run-id rna-run-id2})))))

@@ -37,7 +37,8 @@
   {:bam "star/rna/rna.Aligned.sortedByCoord.out.bam",
    :fusions "fusion/rna/rna.genomonFusion.result.filt.txt",
    :expressions "expression/rna/rna.genomonExpression.result.txt",
-   :intron-retentions "intron_retention/rna/rna.genomonIR.result.txt"})
+   :intron-retentions "intron_retention/rna/rna.genomonIR.result.txt"
+   :svs "sv/rna/rna.genomonSV.result.filt.txt"})
 
 (defn- ->s3 [output-bucket id s]
   (str output-bucket "/" id "/" s))
