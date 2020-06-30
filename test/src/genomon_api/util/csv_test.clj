@@ -113,7 +113,7 @@ control_sample0,sample1.bam
 control_panel,control_sample0
 
 [sv_detection]
-rna,None,None
+rna,None,control_panel
 
 [fusion]
 rna,control_panel
