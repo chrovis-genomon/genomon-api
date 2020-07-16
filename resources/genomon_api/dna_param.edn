@@ -4,13 +4,15 @@
   :bamtofastq-option
   "collate=1 combs=1 exclude=QCFAIL,SECONDARY,SUPPLEMENTARY tryoq=1",
   :bwa-option "-t 8 -T 0",
-  :bwa-reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37",
+  :bwa-reference-dir "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37",
+  :bwa-reference-file "GRCh37.fa",
   :bamsort-option "index=1 level=1 inputthreads=2 outputthreads=2 calmdnm=1 calmdnmrecompindentonly=1",
   :bammarkduplicates-option "markthreads=2 rewritebam=1 rewritebamlevel=1 index=1 md5=1"},
  :control-call
  {:resource "--aws-ec2-instance-type t2.medium",
   :image "genomon/mutation_call:0.2.2",
-  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37",
+  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
+  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai"
   :fisher-single-option "--min_depth 8 --base_quality 15 --min_variant_read 2 --min_allele_freq 0.02 --post_10_q 0.02 -O vcf --print_header",
   :fisher-single-samtools "-q 20 -BQ0 --ff UNMAP,SECONDARY,QCFAIL,DUP"},
  :control-merge
@@ -20,10 +22,11 @@
  :mutation-call
  {:resource "--aws-ec2-instance-type m5.2xlarge",
   :image "genomon/mutation_call:0.2.2",
-  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37",
-  :hotspot-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/hotspot",
+  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
+  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai"
+  :hotspot-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/hotspot/GRCh37_hotspot_database_v20170919.txt",
   :annotation-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/tabix",
-  :fisher-interval-list "GRCh37_8split.interval_list",
+  :fisher-interval-list "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37_8split.interval_list",
   :fisher-single-option "--min_depth 8 --base_quality 15 --min_variant_read 4 --min_allele_freq 0.02 --post_10_q 0.02",
   :fisher-single-samtools "-q 20 -BQ0 --ff UNMAP,SECONDARY,QCFAIL,DUP",
   :fisher-pair-option "--min_depth 8 --base_quality 15 --min_variant_read 4 --min_allele_freq 0.02 --max_allele_freq 0.1 --fisher_value 0.1",
@@ -54,7 +57,7 @@
   :sv-utils-filt-option "--min_tumor_allele_freq 0.07 --max_control_variant_read_pair 1 --control_depth_thres 10 --inversion_size_thres 1000"},
  :qc
  {:resource "--aws-ec2-instance-type t2.medium",
-  :image "genomon/genomon_qc:0.1.0",
+  :image "genomon/genomon_qc:0.2.2",
   :bait-file "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/bait/refGene.coding.exon.151207.bed",
   :gaptxt "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/hg19.fa/gap.txt",
   :genome-size-file "/tools/bedtools2-2.24.0/genomes/human.hg19.genome",
@@ -63,6 +66,7 @@
   :wgs-incl-bed-width "1000000",
   :wgs-i-bed-lines "10000",
   :wgs-i-bed-width "100",
+  :grc-flag "True",
   :samtools-params "-F 3332 -f 2"},
  :pmsignature
  {:enable "True",
