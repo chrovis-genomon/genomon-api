@@ -10,20 +10,20 @@
   :bammarkduplicates-option "markthreads=2 rewritebam=1 rewritebamlevel=1 index=1 md5=1"},
  :control-call
  {:resource "--aws-ec2-instance-type t2.medium",
-  :image "genomon/mutation_call:0.2.2",
+  :image "xcoo/mutation_call",
   :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
   :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai"
   :fisher-single-option "--min_depth 8 --base_quality 15 --min_variant_read 2 --min_allele_freq 0.02 --post_10_q 0.02 -O vcf --print_header",
   :fisher-single-samtools "-q 20 -BQ0 --ff UNMAP,SECONDARY,QCFAIL,DUP"},
  :control-merge
  {:resource "--aws-ec2-instance-type t2.medium",
-  :image "genomon/mutation_call:0.2.2",
+  :image "xcoo/mutation_call",
   :bcftools-option "-i B10:join,BM:join,B90:join -Oz -m none"},
  :mutation-call
  {:resource "--aws-ec2-instance-type m5.2xlarge",
-  :image "genomon/mutation_call:0.2.2",
-  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
-  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai"
+  :image "xcoo/mutation_call",
+  :reference-dir "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37",
+  :reference-file "GRCh37.fa",
   :hotspot-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/hotspot/GRCh37_hotspot_database_v20170919.txt",
   :annotation-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/tabix",
   :fisher-interval-list "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37_8split.interval_list",
@@ -43,16 +43,17 @@
   :active-exac-flag "True"},
  :sv-parse
  {:resource "--aws-ec2-instance-type t2.large",
-  :image "genomon/genomon_sv:0.1.0",
+  :image "xcoo/genomon_sv",
   :genomon-sv-parse-option nil},
  :sv-merge
  {:resource "--aws-ec2-instance-type t2.large",
-  :image "genomon/genomon_sv:0.1.0",
+  :image "xcoo/genomon_sv",
   :genomon-sv-merge-option nil},
  :sv-filt
  {:resource "--aws-ec2-instance-type t2.large",
-  :image "genomon/genomon_sv:0.1.0",
-  :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
+  :image "xcoo/genomon_sv",
+  :reference-dir "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37",
+  :reference-file "GRCh37.fa",
   :genomon-sv-filt-option "--grc --min_junc_num 2 --max_control_variant_read_pair 10 --min_overhang_size 30",
   :sv-utils-filt-option "--min_tumor_allele_freq 0.07 --max_control_variant_read_pair 1 --control_depth_thres 10 --inversion_size_thres 1000"},
  :qc
