@@ -40,7 +40,7 @@
  :fusionfusion
  {:resource "--aws-ec2-instance-type t2.large",
   :image "xcoo/fusionfusion",
-  :fusionfusion-option "--grc",
+  :fusionfusion-option "--grc --no_blat",
   :filt-option "--filter_same_gene --grc",
   :reference-dir "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37"
   :reference-file "GRCh37.fa"},
