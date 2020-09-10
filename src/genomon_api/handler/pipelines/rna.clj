@@ -34,11 +34,18 @@
 
 (defhandler ::create-new-run [_ {:keys [db executor rna-config logger]}]
   {:summary "Create a new run",
-   :parameters {:body {:r1 string?, :r2 string?, (ds/opt :control-panel) [string?]}},
+   :parameters {:body {:r1 string?, :r2 string?,
+                       (ds/opt :control-panel) [string?],
+                       (ds/opt :config) (s/map-of
+                                         keyword?
+                                         (s/map-of keyword?
+                                                   (s/nilable string?)))}},
    :response {201 {:body {:run-id uuid?}}},
-   :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
+   :handler (fn [{{:keys [body]
+                   {:keys [config] :or {config rna-config}} :body} :parameters,
+                  ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (exec/run-rna-pipeline executor id rna-config body)]
+                    run (exec/run-rna-pipeline executor id config body)]
                 (try
                   (db/create-rna-run db run)
                   (rur/created

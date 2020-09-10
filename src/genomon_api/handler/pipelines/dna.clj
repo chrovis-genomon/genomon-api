@@ -36,11 +36,17 @@
   {:summary "Create a new run",
    :parameters {:body {:tumor {:r1 string?, :r2 string?},
                        (ds/opt :normal) {:r1 string?, :r2 string?},
-                       (ds/opt :control-panel) [string?]}},
+                       (ds/opt :control-panel) [string?]
+                       (ds/opt :config) (s/map-of
+                                         keyword?
+                                         (s/map-of keyword?
+                                                   (s/nilable string?)))}},
    :response {201 {:body {:run-id uuid?}}},
-   :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
+   :handler (fn [{{:keys [body]
+                   {:keys [config] :or {config dna-config}} :body} :parameters,
+                  ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (exec/run-dna-pipeline executor id dna-config body)]
+                    run (exec/run-dna-pipeline executor id config body)]
                 (try
                   (db/create-dna-run db run)
                   (rur/created

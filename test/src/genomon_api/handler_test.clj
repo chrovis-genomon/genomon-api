@@ -283,6 +283,21 @@
                         :svs nil},
               :config config}
              (dissoc run :created-at :updated-at)))))
+  (testing "Start a new DNA run with an overridden config"
+    (let [config {:bwa-alignment
+                  {:image "genomon/bwa_alignment:0.2.0"}}
+          {post-status :status
+           {:keys [run-id]}
+           :body} (request
+                   :post "/api/pipelines/dna/runs"
+                   (pr-str {:tumor {:r1 "tr1", :r2 "tr2"}, :config config}))
+          {get-status :status
+           {:keys [run]} :body} (request
+                                 (str "/api/pipelines/dna/runs/" run-id))]
+      (is (= 201 post-status))
+      (is (uuid? run-id))
+      (is (= 200 get-status))
+      (is (= config (:config run)))))
   (testing "RNA config exists"
     (let [{:keys [status body]} (request "/api/pipelines/rna/config")]
       (is (= 200 status) "response ok")
@@ -371,4 +386,19 @@
                         :intron-retentions nil,
                         :svs nil},
               :config config}
-             (dissoc run :created-at :updated-at))))))
+             (dissoc run :created-at :updated-at)))))
+  (testing "Start a new RNA run with an overridden config"
+    (let [config {:bwa-alignment
+                  {:image "genomon/bwa_alignment:0.2.0"}}
+          {post-status :status
+           {:keys [run-id]}
+           :body} (request
+                   :post "/api/pipelines/rna/runs"
+                   (pr-str {:r1 "r1", :r2 "r2", :config config}))
+          {get-status :status
+           {:keys [run]} :body} (request
+                                 (str "/api/pipelines/rna/runs/" run-id))]
+      (is (= 201 post-status))
+      (is (uuid? run-id))
+      (is (= 200 get-status))
+      (is (= config (:config run))))))
