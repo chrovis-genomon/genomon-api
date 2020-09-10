@@ -15,7 +15,7 @@
                   :exclusions [metosin/muuntaja
                                ring/ring-codec
                                org.eclipse.jetty/jetty-server]]
-                 [org.eclipse.jetty/jetty-server "9.4.15.v20190215"]
+                 [org.eclipse.jetty/jetty-server "9.4.31.v20200723"]
                  [ring/ring-codec "1.1.2"
                   :exclusions [commons-codec]] ;; duct/module.web
                  [commons-codec "1.14"] ;; ring/ring-codec
