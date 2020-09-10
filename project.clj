@@ -19,7 +19,7 @@
                  [ring/ring-codec "1.1.2"
                   :exclusions [commons-codec]] ;; duct/module.web
                  [commons-codec "1.15"] ;; ring/ring-codec
-                 [org.apache.commons/commons-compress "1.19"]
+                 [org.apache.commons/commons-compress "1.20"]
                  [mysql/mysql-connector-java "8.0.19"]
                  [com.layerware/hugsql "0.5.1"]
                  [metosin/muuntaja "0.6.6"] ;; duct/module.web
