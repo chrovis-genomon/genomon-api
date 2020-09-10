@@ -18,7 +18,7 @@
                  [org.eclipse.jetty/jetty-server "9.4.31.v20200723"]
                  [ring/ring-codec "1.1.2"
                   :exclusions [commons-codec]] ;; duct/module.web
-                 [commons-codec "1.14"] ;; ring/ring-codec
+                 [commons-codec "1.15"] ;; ring/ring-codec
                  [org.apache.commons/commons-compress "1.19"]
                  [mysql/mysql-connector-java "8.0.19"]
                  [com.layerware/hugsql "0.5.1"]
