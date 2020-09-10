@@ -32,14 +32,15 @@
               {:status 200,
                :body {:runs (db/list-rna-runs db query)}})})
 
-(defhandler ::create-new-run [_ {:keys [db executor rna-config logger]}]
+(defhandler ::create-new-run [_ {:keys [db executor rna-config logger options]}]
   {:summary "Create a new run",
-   :parameters {:body {:r1 string?, :r2 string?,
-                       (ds/opt :control-panel) [string?],
-                       (ds/opt :config) (s/map-of
-                                         keyword?
+   :parameters {:body (cond-> {:r1 string?, :r2 string?,
+                               (ds/opt :control-panel) [string?]}
+                        (:allow-config-overrides? options)
+                        (assoc (ds/opt :config)
+                               (s/map-of keyword?
                                          (s/map-of keyword?
-                                                   (s/nilable string?)))}},
+                                                   (s/nilable string?)))))},
    :response {201 {:body {:run-id uuid?}}},
    :handler (fn [{{:keys [body]
                    {:keys [config] :or {config rna-config}} :body} :parameters,
