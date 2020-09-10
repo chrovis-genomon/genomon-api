@@ -32,7 +32,7 @@
                  [com.cognitect.aws/api "0.8.474"]
                  [com.cognitect.aws/endpoints "1.1.11.842"]
                  [com.cognitect.aws/s3 "809.2.734.0"]
-                 [clj-commons/clj-yaml "0.7.0"]
+                 [clj-commons/clj-yaml "0.7.2"]
                  [camel-snake-kebab "0.4.1"]
                  [instaparse "1.4.10"]
                  [org.flatland/ordered "1.5.7"]
