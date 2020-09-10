@@ -22,7 +22,7 @@
                  [org.apache.commons/commons-compress "1.20"]
                  [mysql/mysql-connector-java "8.0.21"]
                  [com.layerware/hugsql "0.5.1"]
-                 [metosin/muuntaja "0.6.6"] ;; duct/module.web
+                 [metosin/muuntaja "0.6.7"] ;; duct/module.web
                  [metosin/jsonista "0.2.5"] ;; duct/module.web
                  [metosin/reitit "0.4.2"]
                  [metosin/ring-http-response "0.9.1"]
