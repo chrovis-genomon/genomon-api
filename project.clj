@@ -52,7 +52,10 @@
   {:dev  [:project/dev :profiles/dev]
    :repl {:prep-tasks   ^:replace ["javac" "compile"]
           :repl-options {:init-ns user}}
-   :uberjar {:aot :all}
+   :uberjar {:aot :all,
+             :uberjar-exclusions ["genomon_api/config.edn"
+                                  "genomon_api/dna_param.edn"
+                                  "genomon_api/rna_param.edn"]}
    :profiles/dev {}
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources" "test/resources"]
