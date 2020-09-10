@@ -30,7 +30,7 @@
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.474"]
-                 [com.cognitect.aws/endpoints "1.1.11.714"]
+                 [com.cognitect.aws/endpoints "1.1.11.842"]
                  [com.cognitect.aws/s3 "784.2.593.0"]
                  [clj-commons/clj-yaml "0.7.0"]
                  [camel-snake-kebab "0.4.1"]
