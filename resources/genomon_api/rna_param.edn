@@ -9,15 +9,15 @@
   :bammarkduplicates-option "markthreads=2 rewritebam=1 rewritebamlevel=1 index=1 md5=1"},
  :sv-parse
  {:resource "--aws-ec2-instance-type t2.large --disk-size 15",
-  :image "genomon/genomon_sv:0.1.0",
+  :image "chrovis-genomon/genomon_sv:feature-edlib",
   :genomon-sv-parse-option ""},
  :sv-merge
  {:resource "--aws-ec2-instance-type t2.large --disk-size 15",
-  :image "genomon/genomon_sv:0.1.0",
+  :image "chrovis-genomon/genomon_sv:feature-edlib",
   :genomon-sv-merge-option ""},
  :sv-filt
  {:resource "--aws-ec2-instance-type t2.large --disk-size 50",
-  :image "genomon/genomon_sv:0.1.0",
+  :image "chrovis-genomon/genomon_sv:feature-edlib",
   :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
   :genomon-sv-filt-option "--grc --min_junc_num 2 --max_control_variant_read_pair 10 --min_overhang_size 30",
   :sv-utils-filt-option "--min_tumor_allele_freq 0.07 --max_control_variant_read_pair 1 --control_depth_thres 10 --inversion_size_thres 1000"},
@@ -30,16 +30,16 @@
   :samtools-sort-option "-@ 6 -m 3G"},
  :fusion-count-control
  {:resource "--aws-ec2-instance-type t2.medium",
-  :image "genomon/fusionfusion",
+  :image "chrovis-genomon/fusionfusion:feature-no-blat",
   :chimera-utils-count-option nil},
  :fusion-merge-control
  {:resource "--aws-ec2-instance-type t2.medium",
-  :image "genomon/fusionfusion",
+  :image "chrovis-genomon/fusionfusion:feature-no-blat",
   :chimera-utils-merge-control-option nil},
  :fusionfusion
  {:resource "--aws-ec2-instance-type t2.large",
-  :image "genomon/fusionfusion",
-  :fusionfusion-option "--grc",
+  :image "chrovis-genomon/fusionfusion:feature-no-blat",
+  :fusionfusion-option "--grc --no_blat",
   :filt-option "--filter_same_gene --grc",
   :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa"},
  :genomon-expression
