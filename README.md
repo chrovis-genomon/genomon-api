@@ -1,5 +1,7 @@
 # genomon-api
 
+[![build](https://github.com/chrovis-genomon/genomon-api/workflows/build/badge.svg)](https://github.com/chrovis-genomon/genomon-api/actions)
+
 `genomon-api` is an API server for Genomon pipelines.
 `genomon-api` supports the following operations over HTTP:
 - running DNA/RNA pipelines
