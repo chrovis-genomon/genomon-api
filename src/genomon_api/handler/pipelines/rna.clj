@@ -46,7 +46,8 @@
                    {:keys [config] :or {config rna-config}} :body} :parameters,
                   ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (exec/run-rna-pipeline executor id config body)]
+                    samples (dissoc body :config)
+                    run (exec/run-rna-pipeline executor id config samples)]
                 (try
                   (db/create-rna-run db run)
                   (rur/created
