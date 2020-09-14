@@ -48,6 +48,8 @@
                   ::r/keys [router]}]
               (let [id (UUID/randomUUID)
                     samples (dissoc body :config)
+                    config (assoc-in config [:general :instance-option]
+                                     (:instance-option (:general dna-config)))
                     run (exec/run-dna-pipeline executor id config samples)]
                 (try
                   (db/create-dna-run db run)

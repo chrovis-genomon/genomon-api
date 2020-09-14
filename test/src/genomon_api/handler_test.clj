@@ -297,7 +297,8 @@
       (is (= 201 post-status))
       (is (uuid? run-id))
       (is (= 200 get-status))
-      (is (= config (:config run)))))
+      (is (= config (dissoc (:config run) :general)))
+      (is (string? (not-empty (:instance-option (:general (:config run))))))))
   (testing "RNA config exists"
     (let [{:keys [status body]} (request "/api/pipelines/rna/config")]
       (is (= 200 status) "response ok")
@@ -401,4 +402,5 @@
       (is (= 201 post-status))
       (is (uuid? run-id))
       (is (= 200 get-status))
-      (is (= config (:config run))))))
+      (is (= config (dissoc (:config run) :general)))
+      (is (string? (not-empty (:instance-option (:general (:config run)))))))))
