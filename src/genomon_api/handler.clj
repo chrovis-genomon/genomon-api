@@ -106,4 +106,4 @@
   #(duct/merge-configs
     %
     (into {} (map (juxt identity (constantly {})) (keys handler-refs)))
-    {::app {}}))
+    {::app {}, [:duct/const ::options] options}))

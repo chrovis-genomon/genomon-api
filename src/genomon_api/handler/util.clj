@@ -7,7 +7,8 @@
               :storage `(ig/ref :genomon-api/storage)
               :logger `(ig/ref :duct/logger)
               :dna-config `(ig/ref :genomon-api.executor.genomon-pipeline-cloud.config/dna),
-              :rna-config `(ig/ref :genomon-api.executor.genomon-pipeline-cloud.config/rna)}
+              :rna-config `(ig/ref :genomon-api.executor.genomon-pipeline-cloud.config/rna)
+              :options `(ig/ref :genomon-api.handler/options)}
         m (->> params
                second
                :keys

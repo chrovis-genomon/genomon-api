@@ -5,39 +5,39 @@
             :url "https://www.gnu.org/licenses/gpl-3.0.html"}
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [org.clojure/core.async "0.7.559"]
+                 [org.clojure/core.async "1.3.610"]
                  [integrant "0.8.0"]
                  [duct/core "0.8.0"
                   :exclusions [integrant]]
                  [duct/module.logging "0.5.0"]
                  [duct/module.sql "0.6.0"]
-                 [duct/module.web "0.7.0"
+                 [duct/module.web "0.7.1"
                   :exclusions [metosin/muuntaja
                                ring/ring-codec
                                org.eclipse.jetty/jetty-server]]
-                 [org.eclipse.jetty/jetty-server "9.4.15.v20190215"]
+                 [org.eclipse.jetty/jetty-server "9.4.31.v20200723"]
                  [ring/ring-codec "1.1.2"
                   :exclusions [commons-codec]] ;; duct/module.web
-                 [commons-codec "1.14"] ;; ring/ring-codec
-                 [org.apache.commons/commons-compress "1.19"]
-                 [mysql/mysql-connector-java "8.0.19"]
+                 [commons-codec "1.15"] ;; ring/ring-codec
+                 [org.apache.commons/commons-compress "1.20"]
+                 [mysql/mysql-connector-java "8.0.21"]
                  [com.layerware/hugsql "0.5.1"]
-                 [metosin/muuntaja "0.6.6"] ;; duct/module.web
-                 [metosin/jsonista "0.2.5"] ;; duct/module.web
-                 [metosin/reitit "0.4.2"]
+                 [metosin/muuntaja "0.6.7"] ;; duct/module.web
+                 [metosin/jsonista "0.2.7"] ;; duct/module.web
+                 [metosin/reitit "0.5.5"]
                  [metosin/ring-http-response "0.9.1"]
-                 [com.github.docker-java/docker-java "3.1.5"]
+                 [com.github.docker-java/docker-java "3.2.5"]
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
-                 [com.cognitect.aws/api "0.8.423"]
-                 [com.cognitect.aws/endpoints "1.1.11.714"]
-                 [com.cognitect.aws/s3 "784.2.593.0"]
-                 [clj-commons/clj-yaml "0.7.0"]
+                 [com.cognitect.aws/api "0.8.474"]
+                 [com.cognitect.aws/endpoints "1.1.11.842"]
+                 [com.cognitect.aws/s3 "809.2.734.0"]
+                 [clj-commons/clj-yaml "0.7.2"]
                  [camel-snake-kebab "0.4.1"]
                  [instaparse "1.4.10"]
-                 [org.flatland/ordered "1.5.7"]
-                 [io.dropwizard.metrics/metrics-core "4.1.2"]
-                 [io.dropwizard.metrics/metrics-healthchecks "4.1.2"]]
+                 [org.flatland/ordered "1.5.9"]
+                 [io.dropwizard.metrics/metrics-core "4.1.12.1"]
+                 [io.dropwizard.metrics/metrics-healthchecks "4.1.12.1"]]
   :plugins [[duct/lein-duct "0.12.1"]
             [lein-eftest "0.5.9"]]
   :main ^:skip-aot genomon-api.main
@@ -52,7 +52,10 @@
   {:dev  [:project/dev :profiles/dev]
    :repl {:prep-tasks   ^:replace ["javac" "compile"]
           :repl-options {:init-ns user}}
-   :uberjar {:aot :all}
+   :uberjar {:aot :all,
+             :uberjar-exclusions ["genomon_api/config.edn"
+                                  "genomon_api/dna_param.edn"
+                                  "genomon_api/rna_param.edn"]}
    :profiles/dev {}
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources" "test/resources"]

@@ -32,13 +32,24 @@
               {:status 200,
                :body {:runs (db/list-rna-runs db query)}})})
 
-(defhandler ::create-new-run [_ {:keys [db executor rna-config logger]}]
+(defhandler ::create-new-run [_ {:keys [db executor rna-config logger options]}]
   {:summary "Create a new run",
-   :parameters {:body {:r1 string?, :r2 string?, (ds/opt :control-panel) [string?]}},
+   :parameters {:body (cond-> {:r1 string?, :r2 string?,
+                               (ds/opt :control-panel) [string?]}
+                        (:allow-config-overrides? options)
+                        (assoc (ds/opt :config)
+                               (s/map-of keyword?
+                                         (s/map-of keyword?
+                                                   (s/nilable string?)))))},
    :response {201 {:body {:run-id uuid?}}},
-   :handler (fn [{{:keys [body]} :parameters, ::r/keys [router]}]
+   :handler (fn [{{:keys [body]
+                   {:keys [config] :or {config rna-config}} :body} :parameters,
+                  ::r/keys [router]}]
               (let [id (UUID/randomUUID)
-                    run (exec/run-rna-pipeline executor id rna-config body)]
+                    samples (dissoc body :config)
+                    config (assoc-in config [:general :instance-option]
+                                     (:instance-option (:general rna-config)))
+                    run (exec/run-rna-pipeline executor id config samples)]
                 (try
                   (db/create-rna-run db run)
                   (rur/created

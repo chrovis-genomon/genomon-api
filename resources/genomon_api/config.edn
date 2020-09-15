@@ -55,5 +55,5 @@
  :duct.module.web/api {},
  :duct.module/sql {},
 
- :genomon-api.handler/module {},
+ :genomon-api.handler/module {:allow-config-overrides? true},
  :genomon-api.db.sql/module {:migration-dir "migrations"}}
