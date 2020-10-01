@@ -215,9 +215,12 @@
           :opt-un [::tag]))
 
 (defmethod ig/init-key ::executor
-  [_ {:keys [docker logger ch image tag] :as opts}]
+  [_ {:keys [docker logger ch image tag auth-config] :as opts}]
   (log/info logger ::prep-image {:image image, :tag tag})
-  (if-let [img (d/prep-image docker image (cond-> {} tag (assoc :tag tag)))]
+  (if-let [img (d/prep-image docker image
+                             (cond-> {}
+                               tag (assoc :tag tag)
+                               auth-config (assoc :auth-config auth-config)))]
     (do
       (log/info logger ::use-image img)
       (listen-running-pipelines! opts)

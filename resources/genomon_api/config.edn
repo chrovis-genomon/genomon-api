@@ -29,6 +29,8 @@
   :genomon-api.executor.genomon-pipeline-cloud/executor
   {:image "genomon_pipeline_cloud",
    :tag "latest",
+   :auth-config {:username #duct/env ["DOCKER_REGISTRY_AUTH_USERNAME"],
+                 :password #duct/env ["DOCKER_REGISTRY_AUTH_PASSWORD"]},
    :env {"AWS_ACCESS_KEY_ID" #duct/env ["AWS_ACCESS_KEY_ID"],
          "AWS_SECRET_ACCESS_KEY" #duct/env ["AWS_SECRET_ACCESS_KEY"],
          "AWS_DEFAULT_REGION" #duct/env ["AWS_DEFAULT_REGION"]},
