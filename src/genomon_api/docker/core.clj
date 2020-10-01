@@ -21,7 +21,7 @@
             CreateContainerCmd
             StartContainerCmd]
            [com.github.dockerjava.api.model
-            Volume Bind AccessMode Frame StreamType
+            Volume Bind AccessMode Frame StreamType AuthConfig
             ExposedPort Ports Ports$Binding WaitResponse]
            [com.github.dockerjava.jaxrs JerseyDockerCmdExecFactory]
            [com.fasterxml.jackson.databind ObjectMapper]
@@ -93,6 +93,17 @@
              :port default-registry-port
              :tag default-tag})))
 
+(defn- ->auth-config [{:keys [auth email password registry-address
+                              username identity-token registry-token]}]
+  (cond-> (AuthConfig.)
+    auth (.withAuth auth)
+    email (.withEmail email)
+    password (.withPassword password)
+    registry-address (.withRegistryAddress registry-address)
+    username (.withUsername username)
+    identity-token (.withIdentityToken identity-token)
+    registry-token (.withRegistrytoken registry-token)))
+
 (defn pull-image
   ([^DockerClient client image]
    (if-let [{:keys [registry port namespace image tag]} (image->map image)]
@@ -105,7 +116,7 @@
      tag (.withTag tag)
      platform (.withPlatform platform)
      registry (.withRegistry registry)
-     auth-config (.withAuthConfig auth-config)
+     auth-config (.withAuthConfig (->auth-config auth-config))
      true (-> ^PullImageResultCallback (.exec (PullImageResultCallback.))
               (.awaitSuccess)))))
 
