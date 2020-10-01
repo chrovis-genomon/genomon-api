@@ -88,7 +88,7 @@
   (log/error logger ::local-channel-error {:run run :error e}))
 
 (defn- run-pipeline!
-  [{:keys [storage output-bucket docker image env ch logger] :as m}
+  [{:keys [storage output-bucket docker image tag env ch logger] :as m}
    pipeline-type config id samples]
   (let [s3-samples (map-leaves (partial storage/stat storage) samples)
         samples-str ((case pipeline-type
@@ -114,7 +114,8 @@
         _ (async/pipe local-ch ch false) ;; ch
         m (d/run-async
            docker (:image image) local-ch
-           {:env env,
+           {:tag tag,
+            :env env,
             :container-name id,
             :labels {:requester "genomon-api",
                      :pipeline-type (name pipeline-type),
