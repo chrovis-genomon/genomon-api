@@ -23,6 +23,20 @@ generated from HTTP requests and then mounted to the containers.
 
 ## Developing
 
+### Getting genomon_pipeline_cloud
+
+You need to get a docker image of [`genomon_pipeline_cloud`](https://github.com/chrovis/genomon_pipeline_cloud).
+If you don't have it, build one with the following command:
+
+```sh
+git clone https://github.com/chrovis/genomon_pipeline_cloud.git \
+  && cd genomon_pipeline_cloud \
+  && docker build . -t genomon_pipeline_cloud:latest
+```
+
+You can use other images by setting environment variables
+`GENOMON_DOCKER_IMAGE` and `GENOMON_DOCKER_IMAGE_TAG`.
+
 ### Setup
 
 When you first clone this repository, run:
