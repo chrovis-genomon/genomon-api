@@ -27,8 +27,8 @@
    :instance-option #ig/ref :genomon-api.executor.genomon-pipeline-cloud.config/instance-option},
 
   :genomon-api.executor.genomon-pipeline-cloud/executor
-  {:image "genomon_pipeline_cloud",
-   :tag "latest",
+  {:image #duct/env ["GENOMON_DOCKER_IMAGE" Str :or "genomon_pipeline_cloud"],
+   :tag #duct/env ["GENOMON_DOCKER_IMAGE_TAG" Str :or "latest"],
    :auth-config {:username #duct/env ["DOCKER_REGISTRY_AUTH_USERNAME"],
                  :password #duct/env ["DOCKER_REGISTRY_AUTH_PASSWORD"]},
    :env {"AWS_ACCESS_KEY_ID" #duct/env ["AWS_ACCESS_KEY_ID"],
