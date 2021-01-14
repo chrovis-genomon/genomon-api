@@ -25,7 +25,7 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
         run: |
           SHA_TAG=git-`echo ${{ github.sha }} | cut -c 1-7`
-          BRANCH_TAG=`echo ${{ github.ref }} | sed -e "s!refs/heads/!!g" | sed -e "s!/!-!g" | sed -e "s/^master$/latest/g"`
+          BRANCH_TAG=`echo ${{ github.ref }} | sed -E "s!refs/(heads|tags)/!!g" | sed -e "s!/!-!g" | sed -e "s/^master$/latest/g"`
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHA_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHA_TAG
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$SHA_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG
