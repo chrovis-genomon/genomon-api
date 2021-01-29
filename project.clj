@@ -10,7 +10,7 @@
                  [duct/core "0.8.0"
                   :exclusions [integrant]]
                  [duct/module.logging "0.5.0"]
-                 [duct/module.sql "0.6.0"]
+                 [duct/module.sql "0.6.1"]
                  [duct/module.web "0.7.1"
                   :exclusions [metosin/muuntaja
                                ring/ring-codec
