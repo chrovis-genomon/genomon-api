@@ -31,7 +31,7 @@
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.498"]
                  [com.cognitect.aws/endpoints "1.1.11.934"]
-                 [com.cognitect.aws/s3 "809.2.734.0"]
+                 [com.cognitect.aws/s3 "810.2.817.0"]
                  [clj-commons/clj-yaml "0.7.2"]
                  [camel-snake-kebab "0.4.1"]
                  [instaparse "1.4.10"]
