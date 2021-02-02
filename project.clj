@@ -26,7 +26,7 @@
                  [metosin/jsonista "0.3.1"] ;; duct/module.web
                  [metosin/reitit "0.5.11"]
                  [metosin/ring-http-response "0.9.1"]
-                 [com.github.docker-java/docker-java "3.2.5"]
+                 [com.github.docker-java/docker-java "3.2.7"]
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.474"]
