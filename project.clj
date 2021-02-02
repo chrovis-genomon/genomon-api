@@ -33,7 +33,7 @@
                  [com.cognitect.aws/endpoints "1.1.11.934"]
                  [com.cognitect.aws/s3 "810.2.817.0"]
                  [clj-commons/clj-yaml "0.7.2"]
-                 [camel-snake-kebab "0.4.1"]
+                 [camel-snake-kebab "0.4.2"]
                  [instaparse "1.4.10"]
                  [org.flatland/ordered "1.5.9"]
                  [io.dropwizard.metrics/metrics-core "4.1.12.1"]
