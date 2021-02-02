@@ -15,8 +15,7 @@
   (:import [java.nio ByteBuffer]
            [java.util UUID]
            [java.sql Timestamp]
-           [java.time Instant]
-           [java.net URL]))
+           [java.time Instant LocalDateTime ZoneId]))
 
 (defn- uuid->bin ^bytes [^UUID uuid]
   (let [bb (ByteBuffer/allocate 16)
@@ -32,8 +31,8 @@
         lsb (.get lb)]
     (UUID. msb lsb)))
 
-(defn- ts->inst ^Instant [^Timestamp ts]
-  (.toInstant ts))
+(defn- ts->inst ^Instant [^LocalDateTime ldt]
+  (.toInstant (.atZone ldt (ZoneId/systemDefault))))
 
 (defn- inst->ts ^Timestamp [^Instant i]
   (Timestamp/from i))

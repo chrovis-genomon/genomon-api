@@ -20,7 +20,7 @@
                   :exclusions [commons-codec]] ;; duct/module.web
                  [commons-codec "1.15"] ;; ring/ring-codec
                  [org.apache.commons/commons-compress "1.20"]
-                 [mysql/mysql-connector-java "8.0.21"]
+                 [mysql/mysql-connector-java "8.0.23"]
                  [com.layerware/hugsql "0.5.1"]
                  [metosin/muuntaja "0.6.7"] ;; duct/module.web
                  [metosin/jsonista "0.2.7"] ;; duct/module.web
