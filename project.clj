@@ -23,7 +23,7 @@
                  [mysql/mysql-connector-java "8.0.23"]
                  [com.layerware/hugsql "0.5.1"]
                  [metosin/muuntaja "0.6.7"] ;; duct/module.web
-                 [metosin/jsonista "0.2.7"] ;; duct/module.web
+                 [metosin/jsonista "0.3.1"] ;; duct/module.web
                  [metosin/reitit "0.5.5"]
                  [metosin/ring-http-response "0.9.1"]
                  [com.github.docker-java/docker-java "3.2.5"]
