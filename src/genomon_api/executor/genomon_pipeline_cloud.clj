@@ -35,7 +35,7 @@
 
 (def ^:const ^:private rna-result-paths
   {:bam "star/rna/rna.Aligned.sortedByCoord.out.bam",
-   :fusions "fusion/rna/rna.genomonFusion.result.filt.txt",
+   :fusions "fusion/rna/rna.genomonFusion.result.traced.txt",
    :expressions "expression/rna/rna.genomonExpression.result.txt",
    :intron-retentions "intron_retention/rna/rna.genomonIR.result.txt"
    :svs "sv/rna/rna.genomonSV.result.filt.txt"})
