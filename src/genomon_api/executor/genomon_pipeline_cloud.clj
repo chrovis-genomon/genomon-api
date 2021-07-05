@@ -147,7 +147,9 @@
                           (keep (partial pipe-events (atom {}) logger run))
                           (partial handle-error m run))
                 _ (async/pipe local-ch ch false)
-                info {:container-id id, :run run, :container c}]]
+                info {:container-id id, :run run,
+                      :container (update-in
+                                  c [:inspection :config] dissoc "Env")}]]
     (case (keyword state)
       :created
       (do
