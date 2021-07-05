@@ -1,5 +1,5 @@
 {:bwa-alignment
- {:resource "--aws-ec2-instance-type t2.2xlarge --disk-size 64",
+ {:resource "--aws-ec2-instance-type t2.2xlarge --disk-size 80",
   :image "genomon/bwa_alignment:0.2.0",
   :bamtofastq-option
   "collate=1 combs=1 exclude=QCFAIL,SECONDARY,SUPPLEMENTARY tryoq=1",
@@ -12,7 +12,7 @@
  {:resource "--aws-ec2-instance-type t2.medium",
   :image "genomon/mutation_call:0.2.2",
   :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
-  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai"
+  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai",
   :fisher-single-option "--min_depth 8 --base_quality 15 --min_variant_read 2 --min_allele_freq 0.02 --post_10_q 0.02 -O vcf --print_header",
   :fisher-single-samtools "-q 20 -BQ0 --ff UNMAP,SECONDARY,QCFAIL,DUP"},
  :control-merge
@@ -20,10 +20,10 @@
   :image "genomon/mutation_call:0.2.2",
   :bcftools-option "-i B10:join,BM:join,B90:join -Oz -m none"},
  :mutation-call
- {:resource "--aws-ec2-instance-type m5.2xlarge",
+ {:resource "--aws-ec2-instance-type m5.2xlarge --disk-size 50",
   :image "genomon/mutation_call:0.2.2",
   :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
-  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai"
+  :reference-idx "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa.fai",
   :hotspot-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/hotspot/GRCh37_hotspot_database_v20170919.txt",
   :annotation-database "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/tabix",
   :fisher-interval-list "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37_8split.interval_list",
@@ -33,7 +33,7 @@
   :fisher-pair-samtools "-q 20 -BQ0 --ff UNMAP,SECONDARY,QCFAIL,DUP",
   :hotspot-call-option "-t 0.1 -c 0.1 -R 0.1 -m 8.0",
   :hotspot-call-samtools "-B -q 20 -Q2",
-  :realignment-option "--score_difference 5 --window_size 200 --max_depth 5000 --exclude_sam_flags 3332 -T 6",
+  :realignment-option "--score_difference 5 --window_size 200 --max_depth 5000 --exclude_sam_flags 3332 -T 8",
   :indel-option "--search_length 40 --neighbor 5 --min_depth 8 --min_mismatch 100000 --af_thres 1",
   :indel-samtools "-q 20 -BQ0 --ff UNMAP,SECONDARY,QCFAIL,DUP",
   :breakpoint-option "--max_depth 1000 --min_clip_size 20 --junc_num_thres 0 --mapq_thres 10 --exclude_sam_flags 3332",
@@ -42,21 +42,21 @@
   :active-hgvd-2016-flag "True",
   :active-exac-flag "True"},
  :sv-parse
- {:resource "--aws-ec2-instance-type t2.large",
+ {:resource "--aws-ec2-instance-type t2.large --disk-size 15",
   :image "genomon/genomon_sv:0.1.0",
   :genomon-sv-parse-option nil},
  :sv-merge
- {:resource "--aws-ec2-instance-type t2.large",
+ {:resource "--aws-ec2-instance-type t2.large --disk-size 15",
   :image "genomon/genomon_sv:0.1.0",
   :genomon-sv-merge-option nil},
  :sv-filt
- {:resource "--aws-ec2-instance-type t2.large",
+ {:resource "--aws-ec2-instance-type t2.large --disk-size 50",
   :image "genomon/genomon_sv:0.1.0",
   :reference "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/GRCh37/GRCh37.fa",
   :genomon-sv-filt-option "--grc --min_junc_num 2 --max_control_variant_read_pair 10 --min_overhang_size 30",
   :sv-utils-filt-option "--min_tumor_allele_freq 0.07 --max_control_variant_read_pair 1 --control_depth_thres 10 --inversion_size_thres 1000"},
  :qc
- {:resource "--aws-ec2-instance-type t2.medium",
+ {:resource "--aws-ec2-instance-type t2.medium --disk-size 15",
   :image "genomon/genomon_qc:0.2.2",
   :bait-file "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/bait/refGene.coding.exon.151207.bed",
   :gaptxt "s3://genomon-bucket-xcoo-archive-202001/_GRCh37/reference/hg19.fa/gap.txt",
@@ -70,7 +70,7 @@
   :samtools-params "-F 3332 -f 2"},
  :pmsignature
  {:enable "True",
-  :resource "--aws-ec2-instance-type t2.medium",
+  :resource "--aws-ec2-instance-type t2.medium --disk-size 5",
   :image "genomon/pmsignature:0.1.0",
   :signum-min "2",
   :signum-max "6",
@@ -82,7 +82,7 @@
   "TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene"},
  :signature
  {:enable "True",
-  :resource "--aws-ec2-instance-type t2.medium",
+  :resource "--aws-ec2-instance-type t2.medium --disk-size 5",
   :signum-min "2",
   :signum-max "6",
   :trdirflag "F",
@@ -92,7 +92,7 @@
   :txdb-transcript "TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene"},
  :paplot
  {:enable "True",
-  :resource "--aws-ec2-instance-type t2.medium",
+  :resource "--aws-ec2-instance-type t2.medium --disk-size 5",
   :image "genomon/paplot:0.1.0",
   :title "Genomon",
   :remarks "Data used in this report were generated using below software.",

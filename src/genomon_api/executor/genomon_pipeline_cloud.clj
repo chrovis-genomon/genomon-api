@@ -201,7 +201,8 @@
 
 (s/def ::image string?)
 (s/def ::tag string?)
-(s/def ::aws-subnet-id (s/and string? #(re-matches #"subnet-[0-9a-f]+" %)))
+(s/def ::aws-subnet-id
+  (s/and string? #(re-matches #"(subnet-[0-9a-f]+)(,subnet-[0-9a-f]+)*" %)))
 (s/def ::aws-security-group-id (s/and string? #(re-matches #"sg-[0-9a-f]+" %)))
 (s/def ::aws-key-name (s/and string? not-empty))
 (s/def ::aws-ecs-instance-role-name (s/and string? not-empty))

@@ -51,7 +51,10 @@
                                :password #duct/env ["JDBC_PASSWORD"],
                                :use-ssl false,
                                :driver-class-name "com.mysql.cj.jdbc.Driver",
-                               :allow-public-key-retrieval true}},
+                               :allow-public-key-retrieval true,
+                               :preserve-instants true,
+                               :force-connection-time-zone-to-session false,
+                               :connection-time-zone "SERVER"}},
 
  :duct.module/logging {},
  :duct.module.web/api {},
