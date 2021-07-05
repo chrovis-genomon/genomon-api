@@ -6,6 +6,7 @@
             [clojure.core.async :as async]
             [integrant.core :as ig]
             [duct.logger :as log]
+            [duct.core.env :as env]
             [camel-snake-kebab.core :as csk]
             [ring.util.http-response :as hr]
             [genomon-api.executor :as exec]
@@ -26,6 +27,12 @@
            (vector? x) (mapv f x)
            :else x))
    m))
+
+(defn- fill-lazy-env [m]
+  (into {} (map (fn [[k v]]
+                  (if (and (vector? v) (= (first v) :lazy-env))
+                    [k (apply env/env (subvec v 1))]
+                    [k v]))) m))
 
 (def ^:const ^:private dna-result-paths
   {:tumor-bam "bam/tumor/tumor.markdup.bam",
@@ -115,7 +122,7 @@
         m (d/run-async
            docker (:image image) local-ch
            {:tag tag,
-            :env env,
+            :env (fill-lazy-env env),
             :container-name id,
             :labels {:requester "genomon-api",
                      :pipeline-type (name pipeline-type),
@@ -210,7 +217,8 @@
   (s/keys :req-un [::aws-subnet-id ::aws-security-group-id
                    ::aws-key-name ::aws-ecs-instance-role-name]))
 (s/def ::output-bucket (s/and string? #(str/starts-with? % "s3://")))
-(s/def ::env (s/map-of string? string?))
+(s/def ::lazy-env (s/cat :tag #{:lazy-env} :env-var-name string?))
+(s/def ::env (s/map-of string? (s/or :env-var string? :lazy-env-var ::lazy-env)))
 
 (defmethod ig/pre-init-spec ::executor [_]
   (s/keys :req-un [::image ::output-bucket ::env]
@@ -222,7 +230,9 @@
   (if-let [img (d/prep-image docker image
                              (cond-> {}
                                tag (assoc :tag tag)
-                               auth-config (assoc :auth-config auth-config)))]
+                               auth-config (assoc
+                                            :auth-config
+                                            (fill-lazy-env auth-config))))]
     (do
       (log/info logger ::use-image img)
       (listen-running-pipelines! opts)
