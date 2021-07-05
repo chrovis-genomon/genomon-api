@@ -5,7 +5,7 @@
             :url "https://www.gnu.org/licenses/gpl-3.0.html"}
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.10.3"]
-                 [org.clojure/core.async "1.3.610"]
+                 [org.clojure/core.async "1.3.618"]
                  [integrant "0.8.0"]
                  [duct/core "0.8.0"
                   :exclusions [medley]]
