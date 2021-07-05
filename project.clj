@@ -19,7 +19,7 @@
                  [org.apache.commons/commons-compress "1.20"]
                  [mysql/mysql-connector-java "8.0.25"]
                  [com.layerware/hugsql "0.5.1"]
-                 [metosin/reitit "0.5.11"]
+                 [metosin/reitit "0.5.13"]
                  [metosin/ring-http-response "0.9.1"
                   :exclusions [ring/ring-core]]
                  [com.github.docker-java/docker-java "3.2.7"]
