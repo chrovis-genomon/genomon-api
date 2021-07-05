@@ -11,7 +11,7 @@
                   :exclusions [medley]]
                  [duct/module.logging "0.5.0"]
                  [duct/module.sql "0.6.1"]
-                 [duct/module.web "0.7.1"
+                 [duct/module.web "0.7.3"
                   :exclusions [ring/ring-core
                                metosin/jsonista
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
