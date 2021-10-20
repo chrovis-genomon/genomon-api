@@ -11,7 +11,7 @@ LABEL maintainer="Xcoo, Inc. <developer@xcoo.jp>"
 LABEL GIT_COMMIT=${GIT_COMMIT}
 ENV GIT_COMMIT=${GIT_COMMIT}
 COPY --from=builder \
-  /root/genomon-api/target/genomon-api-0.1.1-SNAPSHOT-standalone.jar \
+  /root/genomon-api/target/genomon-api-0.1.1-standalone.jar \
   /usr/share/genomon-api/genomon-api.jar
 COPY docker/genomon-api /usr/local/bin/genomon-api
 COPY resources/genomon_api/ /etc/genomon-api/genomon_api/
