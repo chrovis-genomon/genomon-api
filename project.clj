@@ -22,7 +22,7 @@
                  [metosin/reitit "0.5.15"]
                  [metosin/ring-http-response "0.9.3"
                   :exclusions [ring/ring-core]]
-                 [com.github.docker-java/docker-java "3.2.11"]
+                 [com.github.docker-java/docker-java "3.2.12"]
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.515"]
