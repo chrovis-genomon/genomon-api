@@ -31,7 +31,7 @@
                  [clj-commons/clj-yaml "0.7.107"]
                  [camel-snake-kebab "0.4.2"]
                  [instaparse "1.4.10"]
-                 [org.flatland/ordered "1.5.9"]
+                 [org.flatland/ordered "1.15.10"]
                  [io.dropwizard.metrics/metrics-core "4.2.2"]
                  [io.dropwizard.metrics/metrics-healthchecks "4.2.2"]]
   :plugins [[duct/lein-duct "0.12.1"]
