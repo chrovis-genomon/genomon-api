@@ -28,7 +28,7 @@
                  [com.cognitect.aws/api "0.8.524"]
                  [com.cognitect.aws/endpoints "1.1.12.88"]
                  [com.cognitect.aws/s3 "814.2.991.0"]
-                 [clj-commons/clj-yaml "0.7.106"]
+                 [clj-commons/clj-yaml "0.7.107"]
                  [camel-snake-kebab "0.4.2"]
                  [instaparse "1.4.10"]
                  [org.flatland/ordered "1.5.9"]
