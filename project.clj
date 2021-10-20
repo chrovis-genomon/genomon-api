@@ -15,7 +15,7 @@
                   :exclusions [ring/ring-core
                                metosin/jsonista
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
-                 [org.eclipse.jetty/jetty-server "9.4.42.v20210604"]
+                 [org.eclipse.jetty/jetty-server "11.0.7"]
                  [org.apache.commons/commons-compress "1.20"]
                  [mysql/mysql-connector-java "8.0.25"]
                  [com.layerware/hugsql "0.5.1"]
