@@ -1,11 +1,11 @@
-(defproject genomon-api "0.1.1-SNAPSHOT"
+(defproject genomon-api "0.1.2-SNAPSHOT"
   :description "An API server of genomon_pipeline_cloud"
   :url "https://github.com/chrovis/genomon-api"
   :license {:name "GNU General Pulibc License, Version 3.0"
             :url "https://www.gnu.org/licenses/gpl-3.0.html"}
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.10.3"]
-                 [org.clojure/core.async "1.3.618"]
+                 [org.clojure/core.async "1.3.622"]
                  [integrant "0.8.0"]
                  [duct/core "0.8.0"
                   :exclusions [medley]]
@@ -15,25 +15,25 @@
                   :exclusions [ring/ring-core
                                metosin/jsonista
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
-                 [org.eclipse.jetty/jetty-server "9.4.42.v20210604"]
-                 [org.apache.commons/commons-compress "1.20"]
-                 [mysql/mysql-connector-java "8.0.25"]
+                 [org.eclipse.jetty/jetty-server "11.0.7"]
+                 [org.apache.commons/commons-compress "1.21"]
+                 [mysql/mysql-connector-java "8.0.27"]
                  [com.layerware/hugsql "0.5.1"]
-                 [metosin/reitit "0.5.13"]
-                 [metosin/ring-http-response "0.9.2"
+                 [metosin/reitit "0.5.15"]
+                 [metosin/ring-http-response "0.9.3"
                   :exclusions [ring/ring-core]]
-                 [com.github.docker-java/docker-java "3.2.11"]
+                 [com.github.docker-java/docker-java "3.2.12"]
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
-                 [com.cognitect.aws/api "0.8.515"]
-                 [com.cognitect.aws/endpoints "1.1.12.13"]
-                 [com.cognitect.aws/s3 "811.2.934.0"]
-                 [clj-commons/clj-yaml "0.7.106"]
+                 [com.cognitect.aws/api "0.8.524"]
+                 [com.cognitect.aws/endpoints "1.1.12.88"]
+                 [com.cognitect.aws/s3 "814.2.991.0"]
+                 [clj-commons/clj-yaml "0.7.107"]
                  [camel-snake-kebab "0.4.2"]
                  [instaparse "1.4.10"]
-                 [org.flatland/ordered "1.5.9"]
-                 [io.dropwizard.metrics/metrics-core "4.2.2"]
-                 [io.dropwizard.metrics/metrics-healthchecks "4.2.2"]]
+                 [org.flatland/ordered "1.15.10"]
+                 [io.dropwizard.metrics/metrics-core "4.2.4"]
+                 [io.dropwizard.metrics/metrics-healthchecks "4.2.4"]]
   :plugins [[duct/lein-duct "0.12.1"]
             [lein-eftest "0.5.9"]]
   :main ^:skip-aot genomon-api.main
