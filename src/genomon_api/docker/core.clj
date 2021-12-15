@@ -5,7 +5,6 @@
             [genomon-api.docker :as d]
             [genomon-api.util.tar :as tar])
   (:import [java.util List Map]
-           [java.net SocketTimeoutException]
            [java.io ByteArrayInputStream]
            [java.time Instant Clock]
            [com.github.dockerjava.core
@@ -14,18 +13,15 @@
            [com.github.dockerjava.core.command
             PullImageResultCallback
             WaitContainerResultCallback
-            LogContainerResultCallback
-            ExecStartResultCallback]
+            LogContainerResultCallback]
            [com.github.dockerjava.api DockerClient]
            [com.github.dockerjava.api.command
-            CreateContainerCmd
-            StartContainerCmd]
+            CreateContainerCmd]
            [com.github.dockerjava.api.model
-            Volume Bind AccessMode Frame StreamType AuthConfig
+            Volume Bind AccessMode Frame AuthConfig
             ExposedPort Ports Ports$Binding WaitResponse]
            [com.github.dockerjava.jaxrs JerseyDockerCmdExecFactory]
-           [com.fasterxml.jackson.databind ObjectMapper]
-           [com.github.dockerjava.api.exception ConflictException]))
+           [com.fasterxml.jackson.databind ObjectMapper]))
 
 (defmacro typed-proxy-super [cls method & args]
   (let [thissym (with-meta (gensym) {:tag cls})]
@@ -120,10 +116,6 @@
      true (-> ^PullImageResultCallback (.exec (PullImageResultCallback.))
               (.awaitSuccess)))))
 
-(defn- inspect-image
-  [^DockerClient client id]
-  (.exec (.inspectImageCmd client id)))
-
 (defn list-images
   [^DockerClient client
    {:keys [show-all? dangling? image-name-filter label-filter]}]
@@ -164,8 +156,7 @@
 (defn- with-volumes ^CreateContainerCmd [^CreateContainerCmd cmd volumes]
   (let [[vs bs] (apply map vector
                        (for [[src dst] volumes]
-                         (let [nocopy true
-                               v (Volume. dst)
+                         (let [v (Volume. dst)
                                b (Bind. ^String src v AccessMode/ro)]
                            [v b])))]
     (.. cmd
@@ -308,7 +299,7 @@
 
 (defn- prep-container [client image opts]
   (let [{:keys [id warnings]} (create-container client image opts)]
-    (when-let [w (seq warnings)]
+    (when-let [_ (seq warnings)]
       (rm-container client id opts)
       (throw (ex-info "Failed to create-container" {:warnings warnings})))
     id))
