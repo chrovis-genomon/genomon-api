@@ -25,7 +25,7 @@
                  [com.github.docker-java/docker-java "3.2.12"]
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
-                 [com.cognitect.aws/api "0.8.524"]
+                 [com.cognitect.aws/api "0.8.539"]
                  [com.cognitect.aws/endpoints "1.1.12.88"]
                  [com.cognitect.aws/s3 "814.2.991.0"]
                  [clj-commons/clj-yaml "0.7.107"]
