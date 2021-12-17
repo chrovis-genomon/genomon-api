@@ -13,7 +13,10 @@
                  [duct/module.sql "0.6.1"]
                  [duct/module.web "0.7.3"
                   :exclusions [ring/ring-core
+                               ring/ring-codec
                                metosin/jsonista
+                               crypto-random
+                               commons-codec
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
                  [org.eclipse.jetty/jetty-server "9.4.44.v20210927"]
                  [org.apache.commons/commons-compress "1.21"]
@@ -22,7 +25,9 @@
                  [metosin/reitit "0.5.15"]
                  [metosin/ring-http-response "0.9.3"
                   :exclusions [ring/ring-core]]
-                 [com.github.docker-java/docker-java "3.2.12"]
+                 [com.github.docker-java/docker-java "3.2.12"
+                  :exclusions [commons-io
+                               commons-codec]]
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.539"]
