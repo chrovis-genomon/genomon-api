@@ -1,5 +1,6 @@
 (ns genomon-api.docker.core
   (:require [clojure.string :as str]
+            [clojure.walk :as walk]
             [camel-snake-kebab.core :as csk]
             [integrant.core :as ig]
             [genomon-api.docker :as d]
@@ -21,7 +22,7 @@
             Volume Bind AccessMode Frame AuthConfig
             ExposedPort Ports Ports$Binding WaitResponse]
            [com.github.dockerjava.jaxrs JerseyDockerCmdExecFactory]
-           [com.fasterxml.jackson.databind ObjectMapper]))
+           [com.fasterxml.jackson.databind ObjectMapper SerializationFeature]))
 
 (defmacro typed-proxy-super [cls method & args]
   (let [thissym (with-meta (gensym) {:tag cls})]
@@ -31,8 +32,23 @@
 
 (defn- ->map [model]
   (->> java.util.Map
-       (.convertValue (ObjectMapper.) model)
-       (into {} (map (fn [[k v]] [(csk/->kebab-case-keyword k) v])))))
+       (.convertValue
+        (doto (ObjectMapper.)
+          (.configure SerializationFeature/FAIL_ON_EMPTY_BEANS false))
+        model)
+       (walk/prewalk
+        (fn [x]
+          (cond->> x
+            (instance? java.util.Map x)
+            (into
+             {}
+             (map (fn [[k v]]
+                    [(cond-> k
+                       (string? k)
+                       (#(keyword nil (csk/->kebab-case-string %)))) v])))
+
+            (instance? java.util.List x)
+            (into []))))))
 
 (defn- ->str-map [m]
   (into {} (map (fn [[k v]] [(name k) (str v)])) m))

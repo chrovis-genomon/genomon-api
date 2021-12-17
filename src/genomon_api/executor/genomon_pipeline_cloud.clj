@@ -136,7 +136,7 @@
   [{:keys [logger ch docker] :as m}]
   (log/debug logger ::search-containers {})
   (doseq [{:keys [id state labels]
-           {{:strs [ExitCode FinishedAt]} :state} :inspection
+           {{:keys [exit-code]} :state} :inspection
            :as c} (d/list-containers
                    docker
                    {:show-all? true, :label-filter {"requester" "genomon-api"}})
@@ -148,7 +148,7 @@
                 _ (async/pipe local-ch ch false)
                 info {:container-id id, :run run,
                       :container (update-in
-                                  c [:inspection :config] dissoc "Env")}]]
+                                  c [:inspection :config] dissoc :env)}]]
     (case (keyword state)
       :created
       (do
@@ -164,9 +164,9 @@
       :exited
       (do
         (log/info logger ::remove-finished-container info)
-        (if (zero? ExitCode)
+        (if (zero? exit-code)
           (async/>!! local-ch {:container-id id, :status :succeeded})
-          (async/>!! local-ch {:container-id id, :status :failed, :code ExitCode}))
+          (async/>!! local-ch {:container-id id, :status :failed, :code exit-code}))
         (d/remove-container docker id {}))
 
       (:paused :restarting :removing :dead) ;; TODO: consider other states
