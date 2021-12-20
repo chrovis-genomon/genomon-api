@@ -7,7 +7,6 @@
             [integrant.core :as ig]
             [duct.logger :as log]
             [duct.core.env :as env]
-            [camel-snake-kebab.core :as csk]
             [ring.util.http-response :as hr]
             [genomon-api.executor :as exec]
             [genomon-api.docker :as d]
@@ -50,7 +49,7 @@
 (defn- ->s3 [output-bucket id s]
   (str output-bucket "/" id "/" s))
 
-(defn- parse-log [{{:keys [body]} :log :as event}]
+(defn- parse-log [{{:keys [body]} :log}]
   (condp re-matches body
     #".*ecsub submit .*--tasks \S+?([^/\s]+)-tasks.*\n"
     :>> (fn [[_ x]]
@@ -70,7 +69,7 @@
 (defn- pipe-events
   [state
    {:keys [logger storage]}
-   {:keys [id pipeline-type results] :as run}
+   {:keys [results] :as run}
    {:keys [status] :as event}]
   (let [run-event (merge run event)]
     (case status
@@ -95,9 +94,9 @@
   (log/error logger ::local-channel-error {:run run :error e}))
 
 (defn- run-pipeline!
-  [{:keys [storage output-bucket docker image tag env ch logger] :as m}
+  [{:keys [storage output-bucket docker image tag env ch] :as m}
    pipeline-type config id samples]
-  (let [s3-samples (map-leaves (partial storage/stat storage) samples)
+  (let [_s3-samples (map-leaves (partial storage/stat storage) samples)
         samples-str ((case pipeline-type
                        :dna csv/gen-dna-input
                        :rna csv/gen-rna-input) samples)
@@ -137,7 +136,7 @@
   [{:keys [logger ch docker] :as m}]
   (log/debug logger ::search-containers {})
   (doseq [{:keys [id state labels]
-           {{:strs [ExitCode FinishedAt]} :state} :inspection
+           {{:keys [exit-code]} :state} :inspection
            :as c} (d/list-containers
                    docker
                    {:show-all? true, :label-filter {"requester" "genomon-api"}})
@@ -149,7 +148,7 @@
                 _ (async/pipe local-ch ch false)
                 info {:container-id id, :run run,
                       :container (update-in
-                                  c [:inspection :config] dissoc "Env")}]]
+                                  c [:inspection :config] dissoc :env)}]]
     (case (keyword state)
       :created
       (do
@@ -165,9 +164,9 @@
       :exited
       (do
         (log/info logger ::remove-finished-container info)
-        (if (zero? ExitCode)
+        (if (zero? exit-code)
           (async/>!! local-ch {:container-id id, :status :succeeded})
-          (async/>!! local-ch {:container-id id, :status :failed, :code ExitCode}))
+          (async/>!! local-ch {:container-id id, :status :failed, :code exit-code}))
         (d/remove-container docker id {}))
 
       (:paused :restarting :removing :dead) ;; TODO: consider other states
@@ -194,11 +193,11 @@
   exec/IExecutor
   (run-dna-pipeline [this run-id config samples]
     (run-pipeline! this :dna config run-id samples))
-  (interrupt-dna-pipeline [this run-id]
+  (interrupt-dna-pipeline [_ run-id]
     (interrupt-pipeline! docker :dna run-id))
   (run-rna-pipeline [this run-id config samples]
     (run-pipeline! this :rna config run-id samples))
-  (interrupt-rna-pipeline [this run-id]
+  (interrupt-rna-pipeline [_ run-id]
     (interrupt-pipeline! docker :rna run-id)))
 
 (defmethod ig/prep-key ::executor [_ opts]
@@ -227,7 +226,7 @@
           :opt-un [::tag]))
 
 (defmethod ig/init-key ::executor
-  [_ {:keys [docker logger ch image tag auth-config] :as opts}]
+  [_ {:keys [docker logger image tag auth-config] :as opts}]
   (log/info logger ::prep-image {:image image, :tag tag})
   (if-let [img (d/prep-image docker image
                              (cond-> {}
