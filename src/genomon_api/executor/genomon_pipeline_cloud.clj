@@ -143,7 +143,7 @@
           :let [run (edn/read-string (:run labels)) ;; Get info from a label
                 local-ch (async/chan
                           100
-                          (keep (partial pipe-events (atom {}) logger run))
+                          (keep (partial pipe-events (atom {}) m run))
                           (partial handle-error m run))
                 _ (async/pipe local-ch ch false)
                 info {:container-id id, :run run,
