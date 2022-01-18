@@ -10,7 +10,7 @@
 (defmethod ig/init-key ::ch [_ {:keys [buf-or-n logger]}]
   (async/chan buf-or-n
               identity
-              (fn [e] (log/error ::unhandled {:error e}))))
+              (fn [e] (log/error logger ::unhandled {:error e}))))
 
 (defmethod ig/halt-key! ::ch [_ ch]
   (async/close! ch))
