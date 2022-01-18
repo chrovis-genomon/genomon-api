@@ -140,7 +140,7 @@
            :as c} (d/list-containers
                    docker
                    {:show-all? true, :label-filter {"requester" "genomon-api"}})
-          :let [run (edn/read-string (get labels "run")) ;; Get info from a label
+          :let [run (edn/read-string (:run labels)) ;; Get info from a label
                 local-ch (async/chan
                           100
                           (keep (partial pipe-events (atom {}) logger run))
@@ -177,7 +177,7 @@
   (let [{:keys [id state labels] :as c} (->> {:name-filter [(str run-id)]}
                                              (d/list-containers docker)
                                              first)]
-    (when-not (= (get labels "pipeline-type") (name pipeline-type))
+    (when-not (= (:pipeline-type labels) (name pipeline-type))
       (throw (ex-info "Invalid pipeline type" {:pipeline-type pipeline-type,
                                                :run-id run-id,
                                                :container c})))
