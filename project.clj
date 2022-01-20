@@ -37,7 +37,7 @@
                  [camel-snake-kebab "0.4.2"]
                  [instaparse "1.4.10"]
                  [org.flatland/ordered "1.15.10"]
-                 [io.dropwizard.metrics/metrics-core "4.2.6"]
+                 [io.dropwizard.metrics/metrics-core "4.2.7"]
                  [io.dropwizard.metrics/metrics-healthchecks "4.2.6"]]
   :plugins [[duct/lein-duct "0.12.1"]
             [lein-eftest "0.5.9"]]
