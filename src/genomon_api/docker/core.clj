@@ -297,18 +297,28 @@
                           (.awaitStarted)))))]
      (step max-retry since))))
 
-(defn wait-container [^DockerClient client id]
-  (-> client
-      (.waitContainerCmd id)
-      ^WaitContainerResultCallback
-      (.exec
-       (proxy [WaitContainerResultCallback] []
-         (onNext [^WaitResponse wait-response]
-           (typed-proxy-super WaitContainerResultCallback onNext wait-response)
-           (let [status-code (.getStatusCode wait-response)]
-             status-code
-             nil))))
-      (.awaitStatusCode)))
+(defn wait-container
+  ([client id]
+   (wait-container client id {}))
+  ([^DockerClient client id {:keys [max-retry] :or {max-retry 2}}]
+   (letfn [(step [retry]
+             (try
+               (-> client
+                   (.waitContainerCmd id)
+                   ^WaitContainerResultCallback
+                   (.exec
+                    (proxy [WaitContainerResultCallback] []
+                      (onNext [^WaitResponse wait-response]
+                        (typed-proxy-super WaitContainerResultCallback onNext wait-response)
+                        (let [status-code (.getStatusCode wait-response)]
+                          status-code
+                          nil))))
+                   (.awaitStatusCode))
+               (catch Throwable t
+                 (if (pos? retry)
+                   #(step (dec retry))
+                   (throw t)))))]
+     (trampoline step max-retry))))
 
 ;; wrappers
 
