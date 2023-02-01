@@ -20,7 +20,7 @@
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
                  [org.eclipse.jetty/jetty-server "9.4.44.v20210927"]
                  [org.apache.commons/commons-compress "1.21"]
-                 [mysql/mysql-connector-java "8.0.28"]
+                 [mysql/mysql-connector-java "8.0.32"]
                  [com.layerware/hugsql "0.5.3"]
                  [metosin/reitit "0.5.15"]
                  [metosin/ring-http-response "0.9.3"
