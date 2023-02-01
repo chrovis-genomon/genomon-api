@@ -34,7 +34,7 @@
                  [com.cognitect.aws/endpoints "1.1.12.136"]
                  [com.cognitect.aws/s3 "814.2.1053.0"]
                  [camel-snake-kebab "0.4.3"]
-                 [instaparse "1.4.10"]
+                 [instaparse "1.4.12"]
                  [org.flatland/ordered "1.15.10"]
                  [io.dropwizard.metrics/metrics-core "4.2.7"]
                  [io.dropwizard.metrics/metrics-healthchecks "4.2.7"]]
