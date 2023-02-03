@@ -61,7 +61,7 @@
                   :resource-paths ["dev/resources" "test/resources"]
                   :dependencies   [[integrant/repl "0.3.2"]
                                    [hawk "0.2.11"]
-                                   [eftest "0.5.9"
+                                   [eftest "0.6.0"
                                     :exclusions [mvxcvi/puget]]
                                    [kerodon "0.9.1"
                                     :exclusions [clj-time
