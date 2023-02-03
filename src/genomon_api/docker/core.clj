@@ -316,7 +316,7 @@
                    (.awaitStatusCode))
                (catch Throwable t
                  (if (pos? retry)
-                   #(step (dec retry))
+                   (do (prn t) #(step (dec retry)))
                    (throw t)))))]
      (trampoline step max-retry))))
 
