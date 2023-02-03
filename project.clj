@@ -1,4 +1,4 @@
-(defproject genomon-api "0.1.4"
+(defproject genomon-api "0.1.5-SNAPSHOT"
   :description "An API server of genomon_pipeline_cloud"
   :url "https://github.com/chrovis/genomon-api"
   :license {:name "GNU General Pulibc License, Version 3.0"
