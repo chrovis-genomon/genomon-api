@@ -1,11 +1,22 @@
 (ns genomon-api.util.csv-test
-  (:require [clojure.string :as str]
-            [clojure.test :refer [deftest are]]
+  (:require [clojure.test :refer [deftest are]]
             [genomon-api.util.csv :as csv]))
 
 (deftest gen-dna-input-test
-  (are [samples expected] (= expected (csv/gen-dna-input samples))
+  (are [samples opts expected] (= expected (csv/gen-dna-input samples opts))
     {:tumor {:r1 "tr1.fastq" :r2 "tr2.fastq"}}
+    {}
+    "[fastq]
+tumor,tr1.fastq,tr2.fastq
+
+[mutation_call]
+tumor,None,None
+
+[sv_detection]
+tumor,None,None"
+
+    {:tumor {:r1 "tr1.fastq" :r2 "tr2.fastq"}}
+    {:include-qc? true}
     "[fastq]
 tumor,tr1.fastq,tr2.fastq
 
@@ -20,6 +31,20 @@ tumor"
 
     {:tumor {:r1 "tr1.fastq" :r2 "tr2.fastq"}
      :normal {:r1 "nr1.fastq" :r2 "nr2.fastq"}}
+    {}
+    "[fastq]
+tumor,tr1.fastq,tr2.fastq
+normal,nr1.fastq,nr2.fastq
+
+[mutation_call]
+tumor,normal,None
+
+[sv_detection]
+tumor,normal,None"
+
+    {:tumor {:r1 "tr1.fastq" :r2 "tr2.fastq"}
+     :normal {:r1 "nr1.fastq" :r2 "nr2.fastq"}}
+    {:include-qc? true}
     "[fastq]
 tumor,tr1.fastq,tr2.fastq
 normal,nr1.fastq,nr2.fastq
@@ -36,6 +61,7 @@ normal"
 
     {:tumor {:r1 "tr1.fastq" :r2 "tr2.fastq"}
      :control-panel ["sample1.bam" "sample2.bam"]}
+    {}
     "[fastq]
 tumor,tr1.fastq,tr2.fastq
 
@@ -50,14 +76,12 @@ control_panel,control_sample0,control_sample1
 tumor,None,None
 
 [sv_detection]
-tumor,None,control_panel
-
-[qc]
-tumor"
+tumor,None,control_panel"
 
     {:tumor {:r1 "tr1.fastq" :r2 "tr2.fastq"}
      :normal {:r1 "nr1.fastq" :r2 "nr2.fastq"}
      :control-panel ["sample1.bam" "sample2.bam"]}
+    {}
     "[fastq]
 tumor,tr1.fastq,tr2.fastq
 normal,nr1.fastq,nr2.fastq
@@ -73,17 +97,31 @@ control_panel,control_sample0,control_sample1
 tumor,normal,None
 
 [sv_detection]
-tumor,normal,control_panel
-
-[qc]
-tumor
-normal"
+tumor,normal,control_panel"
 
     ))
 
 (deftest gen-rna-input-test
-  (are [samples expected] (= expected (csv/gen-rna-input samples))
+  (are [samples opts expected] (= expected (csv/gen-rna-input samples opts))
     {:r1 "r1.fastq" :r2 "r2.fastq"}
+    {}
+    "[fastq]
+rna,r1.fastq,r2.fastq
+
+[sv_detection]
+rna,None,None
+
+[fusion]
+rna,None
+
+[expression]
+rna
+
+[intron_retention]
+rna"
+
+    {:r1 "r1.fastq" :r2 "r2.fastq"}
+    {:include-qc? true}
     "[fastq]
 rna,r1.fastq,r2.fastq
 
@@ -103,6 +141,30 @@ rna
 rna"
 
     {:r1 "r1.fastq" :r2 "r2.fastq" :control-panel ["sample1.bam"]}
+    {}
+    "[fastq]
+rna,r1.fastq,r2.fastq
+
+[bam_tofastq]
+control_sample0,sample1.bam
+
+[controlpanel]
+control_panel,control_sample0
+
+[sv_detection]
+rna,None,control_panel
+
+[fusion]
+rna,control_panel
+
+[expression]
+rna
+
+[intron_retention]
+rna"
+
+    {:r1 "r1.fastq" :r2 "r2.fastq" :control-panel ["sample1.bam"]}
+    {:include-qc? true}
     "[fastq]
 rna,r1.fastq,r2.fastq
 
