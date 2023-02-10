@@ -8,6 +8,7 @@
   (:import [java.util List Map]
            [java.io ByteArrayInputStream]
            [java.time Instant Clock]
+           [javax.ws.rs ProcessingException]
            [com.github.dockerjava.core
             DefaultDockerClientConfig
             DockerClientBuilder]
@@ -259,45 +260,65 @@
   ([^DockerClient client id]
    (log-container client id {}))
   ([^DockerClient client id {:keys [stdout? stderr? timestamps? follow-stream?
-                                    tail since on-start on-next on-complete]
+                                    tail since on-start on-next on-complete
+                                    max-retry]
                              :or {stdout? true, stderr? true, timestamps? true,
-                                  follow-stream? true, tail -1}}]
-   (cond-> (.logContainerCmd client id)
-     stdout? (.withStdOut stdout?)
-     stderr? (.withStdErr stderr?)
-     tail (.withTail (int tail))
-     since (.withSince since)
-     timestamps? (.withTimestamps timestamps?)
-     follow-stream? (.withFollowStream follow-stream?)
-     true (-> ^LogContainerResultCallback
-           (.exec
-            (proxy [LogContainerResultCallback] []
-              (onStart [stream]
-                (typed-proxy-super LogContainerResultCallback onStart stream)
-                (when on-start (on-start {:container-id id})))
-              (onNext [item]
-                (typed-proxy-super LogContainerResultCallback onNext item)
-                (when on-next
-                  (on-next (into {:container-id id}
-                                 (->log-line timestamps? item)))))
-              (onComplete []
-                (typed-proxy-super LogContainerResultCallback onComplete)
-                (when on-complete
-                  (on-complete {:container-id id})))))
-              (.awaitStarted)))))
+                                  follow-stream? true, tail -1, max-retry 2}}]
+   (letfn [(step [retry since]
+             (let [prev-ts (volatile! since)]
+               (cond-> (.logContainerCmd client id)
+                 stdout? (.withStdOut stdout?)
+                 stderr? (.withStdErr stderr?)
+                 tail (.withTail (int tail))
+                 since (.withSince since)
+                 timestamps? (.withTimestamps timestamps?)
+                 follow-stream? (.withFollowStream follow-stream?)
+                 true (-> ^LogContainerResultCallback
+                       (.exec
+                        (proxy [LogContainerResultCallback] []
+                          (onStart [stream]
+                            (typed-proxy-super LogContainerResultCallback onStart stream)
+                            (when on-start (on-start {:container-id id})))
+                          (onNext [item]
+                            (typed-proxy-super LogContainerResultCallback onNext item)
+                            (let [{ts :timestamp :as m} (->log-line timestamps? item)]
+                              (when on-next
+                                (on-next (into {:container-id id} m)))
+                              (vreset! prev-ts (.getEpochSecond ^Instant ts))))
+                          (onComplete []
+                            (typed-proxy-super LogContainerResultCallback onComplete)
+                            (when on-complete
+                              (on-complete {:container-id id})))
+                          (onError [t]
+                            (typed-proxy-super LogContainerResultCallback onError t)
+                            (when (and (instance? ProcessingException t)
+                                       (pos? retry))
+                              (step (dec retry) @prev-ts)))))
+                          (.awaitStarted)))))]
+     (step max-retry since))))
 
-(defn wait-container [^DockerClient client id]
-  (-> client
-      (.waitContainerCmd id)
-      ^WaitContainerResultCallback
-      (.exec
-       (proxy [WaitContainerResultCallback] []
-         (onNext [^WaitResponse wait-response]
-           (typed-proxy-super WaitContainerResultCallback onNext wait-response)
-           (let [status-code (.getStatusCode wait-response)]
-             status-code
-             nil))))
-      (.awaitStatusCode)))
+(defn wait-container
+  ([client id]
+   (wait-container client id {}))
+  ([^DockerClient client id {:keys [max-retry] :or {max-retry 2}}]
+   (letfn [(step [retry]
+             (try
+               (-> client
+                   (.waitContainerCmd id)
+                   ^WaitContainerResultCallback
+                   (.exec
+                    (proxy [WaitContainerResultCallback] []
+                      (onNext [^WaitResponse wait-response]
+                        (typed-proxy-super WaitContainerResultCallback onNext wait-response)
+                        (let [status-code (.getStatusCode wait-response)]
+                          status-code
+                          nil))))
+                   (.awaitStatusCode))
+               (catch Throwable t
+                 (if (pos? retry)
+                   (do (prn t) #(step (dec retry)))
+                   (throw t)))))]
+     (trampoline step max-retry))))
 
 ;; wrappers
 
