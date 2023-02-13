@@ -2,13 +2,14 @@
   (:require [integrant.core :as ig]
             [cognitect.anomalies :as anomalies]
             [cognitect.aws.client.api :as aws]
+            cognitect.aws.client.impl
             [cognitect.aws.credentials :as credentials]
             [ring.util.http-response :as hr]
             [camel-snake-kebab.core :as csk]
             [camel-snake-kebab.extras :as csk-ex]
             [genomon-api.storage :as storage])
   (:import [java.util Date]
-           [cognitect.aws.client Client]))
+           [cognitect.aws.client.impl Client]))
 
 (defn- ->edn [response]
   (-> (csk-ex/transform-keys csk/->kebab-case-keyword response)
