@@ -33,7 +33,7 @@
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.686"]
                  [com.cognitect.aws/endpoints "1.1.12.504"]
-                 [com.cognitect.aws/s3 "825.2.1250.0"]
+                 [com.cognitect.aws/s3 "848.2.1413.0"]
                  [camel-snake-kebab "0.4.3"]
                  [instaparse "1.4.12"]
                  [org.flatland/ordered "1.15.10"]
