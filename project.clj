@@ -26,7 +26,7 @@
                  [metosin/reitit "0.6.0"]
                  [metosin/ring-http-response "0.9.3"
                   :exclusions [ring/ring-core]]
-                 [com.github.docker-java/docker-java "3.2.14"
+                 [com.github.docker-java/docker-java "3.3.2"
                   :exclusions [commons-io
                                commons-codec]]
                  [javax.activation/activation "1.1.1"]
