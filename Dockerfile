@@ -1,11 +1,11 @@
-FROM clojure:openjdk-11-lein-2.9.1-slim-buster AS builder
+FROM clojure:temurin-20-lein-jammy AS builder
 WORKDIR /root/genomon-api
 COPY project.clj /root/genomon-api/project.clj
 RUN lein -U deps
 COPY . /root/genomon-api
 RUN lein uberjar
 
-FROM openjdk:11.0.6-jre-slim-buster AS genomon-api
+FROM eclipse-temurin:20-jre-jammy AS genomon-api
 ARG GIT_COMMIT
 LABEL maintainer="Xcoo, Inc. <developer@xcoo.jp>"
 LABEL GIT_COMMIT=${GIT_COMMIT}
