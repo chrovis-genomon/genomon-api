@@ -19,7 +19,7 @@
                                commons-codec
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
                  [org.eclipse.jetty/jetty-server "9.4.48.v20220622"]
-                 [org.apache.commons/commons-compress "1.22"]
+                 [org.apache.commons/commons-compress "1.23.0"]
                  [mysql/mysql-connector-java "8.0.32"]
                  [com.layerware/hugsql "0.5.3"]
                  [metosin/reitit "0.5.18"]
