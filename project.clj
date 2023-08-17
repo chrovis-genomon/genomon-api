@@ -32,7 +32,7 @@
                  [javax.activation/activation "1.1.1"]
                  [com.cognitect/anomalies "0.1.12"]
                  [com.cognitect.aws/api "0.8.686"]
-                 [com.cognitect.aws/endpoints "1.1.12.398"]
+                 [com.cognitect.aws/endpoints "1.1.12.504"]
                  [com.cognitect.aws/s3 "825.2.1250.0"]
                  [camel-snake-kebab "0.4.3"]
                  [instaparse "1.4.12"]
