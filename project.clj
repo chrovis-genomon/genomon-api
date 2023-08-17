@@ -36,7 +36,7 @@
                  [com.cognitect.aws/s3 "848.2.1413.0"]
                  [camel-snake-kebab "0.4.3"]
                  [instaparse "1.4.12"]
-                 [org.flatland/ordered "1.15.10"]
+                 [org.flatland/ordered "1.15.11"]
                  [io.dropwizard.metrics/metrics-core "4.2.15"]
                  [io.dropwizard.metrics/metrics-healthchecks "4.2.15"]]
   :plugins [[duct/lein-duct "0.12.3"]
