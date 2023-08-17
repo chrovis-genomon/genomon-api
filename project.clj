@@ -60,7 +60,7 @@
    :profiles/dev {}
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources" "test/resources"]
-                  :dependencies   [[integrant/repl "0.3.2"]
+                  :dependencies   [[integrant/repl "0.3.3"]
                                    [hawk "0.2.11"]
                                    [eftest "0.6.0"
                                     :exclusions [mvxcvi/puget]]
