@@ -38,7 +38,7 @@
                  [instaparse "1.4.12"]
                  [org.flatland/ordered "1.15.11"]
                  [io.dropwizard.metrics/metrics-core "4.2.19"]
-                 [io.dropwizard.metrics/metrics-healthchecks "4.2.15"]]
+                 [io.dropwizard.metrics/metrics-healthchecks "4.2.19"]]
   :plugins [[duct/lein-duct "0.12.3"]
             [lein-eftest "0.6.0"]]
   :main ^:skip-aot genomon-api.main
