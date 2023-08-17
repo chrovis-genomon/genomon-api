@@ -19,7 +19,7 @@
                                crypto-equality
                                commons-codec
                                com.fasterxml.jackson.datatype/jackson-datatype-jsr310]]
-                 [org.eclipse.jetty/jetty-server "9.4.48.v20220622"]
+                 [org.eclipse.jetty/jetty-server "9.4.51.v20230217"]
                  [org.apache.commons/commons-compress "1.23.0"]
                  [mysql/mysql-connector-java "8.0.33"]
                  [com.layerware/hugsql "0.5.3"]
