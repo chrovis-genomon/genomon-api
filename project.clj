@@ -67,6 +67,6 @@
                                    [kerodon "0.9.1"
                                     :exclusions [clj-time
                                                  ring/ring-codec]]
-                                   [com.h2database/h2 "2.1.214"]
+                                   [com.h2database/h2 "2.2.220"]
                                    [com.gearswithingears/shrubbery "0.4.1"]]
                   :global-vars {*warn-on-reflection* true}}})
