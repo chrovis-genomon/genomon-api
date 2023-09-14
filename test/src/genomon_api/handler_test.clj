@@ -52,7 +52,9 @@
 
 (defmethod ig/init-key ::executor [_ {:keys [ch]}]
   (reify exec/IExecutor
-    (run-dna-pipeline [this run-id config samples]
+    (run-dna-pipeline [this run-id config
+                       {{nr1 :r1 nr2 :r2 nb :bam} :normal
+                        {tb :bam} :tumor :as samples}]
       (let [run {:run-id run-id,
                  :pipeline-type :dna,
                  :status :created,
@@ -61,10 +63,12 @@
                  :image-id example-image-id,
                  :container-id example-container-id-1,
                  :config config,
-                 :results {:normal-bam (when (and (get-in samples [:normal :r1])
-                                                  (get-in samples [:normal :r2]))
-                                         (str example-bucket run-id "/normal.bam")),
-                           :tumor-bam (str example-bucket run-id "/tumor.bam"),
+                 :results {:normal-bam
+                           (or nb
+                               (when (and nr1 nr2)
+                                 (str example-bucket run-id "/normal.bam"))),
+                           :tumor-bam
+                           (or tb (str example-bucket run-id "/tumor.bam")),
                            :mutations (str example-bucket run-id "/mut.txt"),
                            :svs (str example-bucket run-id "/sv.txt")}}]
         (async/go
@@ -132,8 +136,7 @@
            :body} (request :post "/api/pipelines/dna/runs"
                            (pr-str {:normal {:r1 "normal-r1",
                                              :r2 "normal-r2"},
-                                    :tumor {:r1 "tumor-r1",
-                                            :r2 "tumor-r2"}}))
+                                    :tumor {:bam "tumor.bam"}}))
           {get-status :status
            {:keys [run]} :body} (request
                                  (str "/api/pipelines/dna/runs/" run-id))
@@ -149,11 +152,9 @@
               :container-id example-container-id-1,
               :output-dir (str example-bucket run-id),
               :samples {:normal {:r1 "normal-r1",
-                                 :r2 "normal-r2"},
-                        :tumor {:r1 "tumor-r1",
-                                :r2 "tumor-r2"}},
+                                 :r2 "normal-r2"}},
               :results {:normal-bam nil,
-                        :tumor-bam nil,
+                        :tumor-bam "tumor.bam",
                         :mutations nil,
                         :svs nil},
               :config config}

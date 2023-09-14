@@ -87,7 +87,9 @@
    [:normal-r1] [:samples :normal :r1]
    ^:ignore-if-nil
    [:normal-r2] [:samples :normal :r2]
+   ^:ignore-if-nil
    [:tumor-r1] [:samples :tumor :r1]
+   ^:ignore-if-nil
    [:tumor-r2] [:samples :tumor :r2]
    ^:ignore-if-nil
    [:control-panel] [:samples :control-panel]
@@ -110,9 +112,14 @@
   db/IDNARunDB
   (create-dna-run [{:keys [spec]} run]
     (jdbc/with-db-transaction [tx spec]
-      (let [run (->> (unparse-dna run)
-                     (merge {:normal-r1 nil :normal-r2 nil
-                             :control-panel nil}))]
+      (let [run (cond-> (merge {:normal-r1 nil, :normal-r2 nil
+                                :tumor-r1 nil, :tumor-r2 nil,
+                                :control-panel nil} (unparse-dna run))
+                  (nil? (get-in run [:samples :normal :bam]))
+                  (assoc :normal-bam nil)
+
+                  (nil? (get-in run [:samples :tumor :bam]))
+                  (assoc :tumor-bam nil))]
         (_insert-run! tx run)
         (_insert-dna-run! tx run))))
   (update-dna-run-status [{:keys [spec]} {:keys [status] :as run}]

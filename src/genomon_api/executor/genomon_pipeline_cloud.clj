@@ -110,7 +110,13 @@
                        (case pipeline-type
                          :dna (cond-> dna-result-paths
                                 (not (:normal samples))
-                                (assoc :normal-bam nil))
+                                (assoc :normal-bam nil)
+
+                                (:bam (:tumor samples))
+                                (assoc :tumor-bam (:bam (:tumor samples)))
+
+                                (:bam (:normal samples))
+                                (assoc :normal-bam (:bam (:normal samples))))
                          :rna rna-result-paths)),
              :image-id (:id image),
              :samples samples,

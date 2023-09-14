@@ -65,7 +65,7 @@
     (is (nil? (db/get-dna-run *db* {:run-id dna-run-id2})))
     (is (not (nil? (db/create-dna-run *db* {:run-id dna-run-id2,
                                             :status :created,
-                                            :samples {:tumor {:r1 "tr1", :r2 "tr2"},},
+                                            :samples {:tumor {:r1 "tr1", :r2 "tr2"}},
                                             :output-dir (str "s3://genomon-api/test/" dna-run-id2),
                                             :image-id image-id,
                                             :container-id container-id,

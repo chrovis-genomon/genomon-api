@@ -17,15 +17,28 @@
 
 (defn gen-dna-input
   ([samples] (gen-dna-input samples {}))
-  ([{{normal-r1 :r1 normal-r2 :r2} :normal
-     {tumor-r1 :r1 tumor-r2 :r2} :tumor
-     :keys [control-panel]}
+  ([{{normal-r1 :r1 normal-r2 :r2 normal-bam :bam} :normal
+     {tumor-r1 :r1 tumor-r2 :r2 tumor-bam :bam} :tumor
+     :keys [control-panel] :as input}
     {:keys [include-qc?]}]
-   (let [tumor-only? (not (and normal-r1 normal-r2))]
-     (-> `[[:fastq
-            ~(cond-> [["tumor" tumor-r1 tumor-r2]]
-               (not tumor-only?)
-               (conj ["normal" normal-r1 normal-r2]))]
+   (let [align-normal? (and (not normal-bam) normal-r1 normal-r2)
+         align-tumor? (and (not tumor-bam) tumor-r1 tumor-r2)
+         tumor-only? (not (or (and normal-r1 normal-r2) normal-bam))]
+     (when-not (or tumor-bam (and tumor-r1 tumor-r2))
+       (throw (ex-info "Either bam or R1/R2 fastq of tumor is required" input)))
+     (when (or (and tumor-bam (or tumor-r1 tumor-r2))
+               (and normal-bam (or normal-r1 normal-r2)))
+       (throw (ex-info "Bam and fastq cannot be specified at once" input)))
+     (-> `[~@(when (or normal-bam tumor-bam)
+               `[[:bam-import
+                  ~(cond-> []
+                     normal-bam (conj ["normal" normal-bam])
+                     tumor-bam (conj ["tumor" tumor-bam]))]])
+           ~@(when (or align-normal? align-tumor?)
+               `[[:fastq
+                  ~(cond-> []
+                     align-tumor? (conj ["tumor" tumor-r1 tumor-r2])
+                     align-normal? (conj ["normal" normal-r1 normal-r2]))]])
            ~@(gen-controlpanel-config control-panel)
            [:mutation-call
             [["tumor" ~(if tumor-only? "None" "normal") "None"]]]

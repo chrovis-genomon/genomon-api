@@ -19,8 +19,8 @@ SELECT `r`.*,
  WHERE `d`.`run-id` = :run-id;
 
 -- :name _insert-dna-run! :i! :raw
-INSERT INTO `dna-runs` (`run-id`, `normal-r1`, `normal-r2`, `tumor-r1`, `tumor-r2`, `control-panel`)
-VALUES (:run-id, :normal-r1, :normal-r2, :tumor-r1, :tumor-r2, :control-panel);
+INSERT INTO `dna-runs` (`run-id`, `normal-r1`, `normal-r2`, `normal-bam`, `tumor-r1`, `tumor-r2`, `tumor-bam`, `control-panel`)
+VALUES (:run-id, :normal-r1, :normal-r2, :normal-bam, :tumor-r1, :tumor-r2, :tumor-bam, :control-panel);
 
 -- :name _update-dna-results! :! :n
 UPDATE `dna-runs`

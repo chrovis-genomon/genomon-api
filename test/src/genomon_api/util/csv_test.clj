@@ -1,5 +1,5 @@
 (ns genomon-api.util.csv-test
-  (:require [clojure.test :refer [deftest are]]
+  (:require [clojure.test :refer [deftest is are]]
             [genomon-api.util.csv :as csv]))
 
 (deftest gen-dna-input-test
@@ -99,7 +99,76 @@ tumor,normal,None
 [sv_detection]
 tumor,normal,control_panel"
 
-    ))
+    {:tumor {:bam "t.bam"}}
+    {}
+    "[bam_import]
+tumor,t.bam
+
+[mutation_call]
+tumor,None,None
+
+[sv_detection]
+tumor,None,None"
+
+    {:tumor {:bam "t.bam"},
+     :normal {:bam "n.bam"}}
+    {}
+    "[bam_import]
+normal,n.bam
+tumor,t.bam
+
+[mutation_call]
+tumor,normal,None
+
+[sv_detection]
+tumor,normal,None"
+
+    {:tumor {:r1 "tr1.fastq", :r2 "tr2.fastq"},
+     :normal {:bam "n.bam"}}
+    {}
+    "[bam_import]
+normal,n.bam
+
+[fastq]
+tumor,tr1.fastq,tr2.fastq
+
+[mutation_call]
+tumor,normal,None
+
+[sv_detection]
+tumor,normal,None"
+
+
+    {:tumor {:bam "t.bam"},
+     :normal {:r1 "nr1.fastq", :r2 "nr2.fastq"}}
+    {}
+    "[bam_import]
+tumor,t.bam
+
+[fastq]
+normal,nr1.fastq,nr2.fastq
+
+[mutation_call]
+tumor,normal,None
+
+[sv_detection]
+tumor,normal,None")
+
+  (is (thrown-with-msg?
+       Throwable #"tumor is required"
+       (csv/gen-dna-input {:normal {:bam "n.bam"}} {})))
+
+  (is (thrown-with-msg?
+       Throwable #"tumor is required"
+       (csv/gen-dna-input {:tumor {:r1 "tr1.fastq"}} {})))
+
+  (is (thrown-with-msg?
+       Throwable #"Bam and fastq"
+       (csv/gen-dna-input {:tumor {:bam "t.bam", :r1 "tr1.fastq"}} {})))
+
+  (is (thrown-with-msg?
+       Throwable #"Bam and fastq"
+       (csv/gen-dna-input {:tumor {:bam "t.bam", :r2 "tr1.fastq"}} {}))))
 
 (deftest gen-rna-input-test
   (are [samples opts expected] (= expected (csv/gen-rna-input samples opts))

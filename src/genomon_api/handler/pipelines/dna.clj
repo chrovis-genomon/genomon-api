@@ -34,9 +34,14 @@
 
 (defhandler ::create-new-run [_ {:keys [db executor dna-config logger options]}]
   {:summary "Create a new run",
-   :parameters {:body (cond-> {:tumor {:r1 string?, :r2 string?},
-                               (ds/opt :normal) {:r1 string?, :r2 string?},
-                               (ds/opt :control-panel) [string?]}
+   :parameters {:body (cond->
+                          {:tumor {(ds/opt :r1) string?,
+                                   (ds/opt :r2) string?,
+                                   (ds/opt :bam) string?},
+                           (ds/opt :normal) {(ds/opt :r1) string?,
+                                             (ds/opt :r2) string?,
+                                             (ds/opt :bam) string?},
+                           (ds/opt :control-panel) [string?]}
                         (:allow-config-overrides? options)
                         (assoc (ds/opt :config)
                                (s/map-of keyword?
