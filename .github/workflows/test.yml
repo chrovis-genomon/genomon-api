@@ -15,14 +15,6 @@ jobs:
         java-version: 11
         architecture: x64
 
-    - name: Cache m2 repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/project.clj') }}
-        restore-keys: |
-          ${{ runner.os }}-m2-
-
     - name: Install dependencies
       run: lein deps
 
