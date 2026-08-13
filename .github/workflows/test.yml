@@ -15,6 +15,11 @@ jobs:
         java-version: 11
         architecture: x64
 
+    - name: Setup Clojure
+      uses: DeLaGuardo/setup-clojure@13
+      with:
+        lein: latest
+
     - name: Install dependencies
       run: lein deps
 
